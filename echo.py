@@ -1,3 +1,7 @@
+"""
+To check how sturm interprets your keystrokes.
+"""
+
 import sturm
 
 def main():
@@ -7,10 +11,12 @@ def main():
 def run():
     strokes = []
     while True:
-        sturm.render(repr(strokes) + '\n')
+        sturm.render(("Hit some keys; hit esc to quit.\n\n",
+                      repr(strokes), sturm.cursor))
         key = sturm.get_key()
-        if key == 'q':
+        if key == sturm.esc:
             break
         strokes.append(key)
 
-main()
+if __name__ == '__main__':
+    main()
