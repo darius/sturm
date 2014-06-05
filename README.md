@@ -1,0 +1,4 @@
+sturm
+=====
+
+Simpleminded terminal interface
