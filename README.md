@@ -20,3 +20,9 @@ code.
 ## To Use
 
 `import sturm`. The other `.py` files here are examples.
+
+## Bugs
+
+On my system if I hold down an arrow key for auto-repeat, get_key()
+may return a bare escape character. Presumably the OS claims the rest
+of the escape sequence isn't available yet. Argh.
