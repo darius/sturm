@@ -183,6 +183,7 @@ key_map = {chr(127): 'backspace',
            esc+'[4~': 'end',   esc+'[D': 'left',  esc+'OD': 'left',
            esc+'[5~': 'pgup',  
            esc+'[6~': 'pgdn',  
+           esc+'[Z':  'shift-tab',
            esc+'[17~': 'f6',   esc+'[20~': 'f9',  esc+'[23~': 'f11',
            esc+'[18~': 'f7',   esc+'[21~': 'f10', esc+'[24~': 'f12',
            esc+'[19~': 'f8'}
