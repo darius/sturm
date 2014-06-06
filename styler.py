@@ -1,7 +1,7 @@
 """
 Let's interactively tweak styles and colors in a mockup.
 TODO:
- - export designs
+ - save designs to a file or something
  - load the mockup from elsewhere
  - highlight currently-active styles/colors
  - load saved designs
@@ -13,6 +13,14 @@ import sturm
 def main():
     with sturm.cbreak_mode():
         run()
+    dump()
+
+def dump():
+    print()
+    print('styles = {}')
+    for thing in mockup:
+        if isinstance(thing, Cell):
+            thing.dump()
 
 def run():
     pos = 0
@@ -71,6 +79,25 @@ class Cell(object):
         for style in self.styles:
             scene = style(scene)
         yield scene
+
+    def dump(self):
+        print('styles[%r] = %s' % (self.text, self.export()))
+
+    def export(self):
+        expr = repr(self.text)
+        expr = uncall(self.bg, expr)
+        expr = uncall(self.fg, expr)
+        for style in self.styles:
+            expr = uncall(style, expr)
+        return expr
+
+def uncall(style, expr):
+    return 'sturm.%s(%s)' % (style.__name__, expr)
+
+## x = Cell('hey')
+## x.toggle(sturm.underlined)
+## x.dump()
+#. styles['hey'] = sturm.underlined(sturm.fg_default(sturm.on_default('hey')))
 
 def view(things, point):
     pos = 0
