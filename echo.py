@@ -1,5 +1,7 @@
 """
 To check how sturm interprets your keystrokes.
+We quit on Q instead of the escape key because there are still
+unmapped keys with escape sequences.
 """
 
 import sturm
@@ -11,10 +13,10 @@ def main():
 def run():
     strokes = []
     while True:
-        sturm.render(("Hit some keys; hit esc to quit.\n\n",
+        sturm.render(("Hit some keys; or hit capital Q to quit.\n\n",
                       repr(strokes), sturm.cursor))
         key = sturm.get_key()
-        if key == sturm.esc:
+        if key == 'Q':
             break
         strokes.append(key)
 
