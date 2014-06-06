@@ -12,7 +12,7 @@ import sturm
 
 def main():
     with sturm.cbreak_mode():
-        run()
+        edit()
     dump()
 
 def dump():
@@ -22,7 +22,7 @@ def dump():
         if isinstance(thing, Cell):
             thing.dump()
 
-def run():
+def edit():
     pos = 0
     things = [thing for thing in mockup if isinstance(thing, Cell)]
     while True:
