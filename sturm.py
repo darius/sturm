@@ -126,7 +126,7 @@ class Painter(object):
     def __init__(self, paint):
         self.paint = paint
 
-def ForegroundColor(code):
+def ForegroundColor(name, code):
     def Attribute(subscene):
         def subpaint(screen, state):
             fg = state.fg
@@ -136,9 +136,10 @@ def ForegroundColor(code):
             finally:
                 state.fg = fg
         return Painter(subpaint)
+    Attribute.__name__ = name
     return Attribute
 
-def BackgroundColor(code):
+def BackgroundColor(name, code):
     def Attribute(subscene):
         def subpaint(screen, state):
             bg = state.bg
@@ -148,9 +149,10 @@ def BackgroundColor(code):
             finally:
                 state.bg = bg
         return Painter(subpaint)
+    Attribute.__name__ = name
     return Attribute
 
-def Style(code):
+def Style(name, code):
     mask = 1 << code
     def Attribute(subscene):
         def subpaint(screen, state):
@@ -161,13 +163,21 @@ def Style(code):
             finally:
                 state.styles = styles
         return Painter(subpaint)
+    Attribute.__name__ = name
     return Attribute
 
-black, red, green, yellow, blue, magenta, cyan, white = map(ForegroundColor, range(30, 38))
-fg_default = ForegroundColor(39)
-on_black, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white = map(BackgroundColor, range(40, 48))
-on_default = BackgroundColor(49)
-bold, underlined, blinking, inverted = map(Style, (1, 4, 5, 7))
+colors = 'black red green yellow blue magenta cyan white'.split()
+black, red, green, yellow, blue, magenta, cyan, white = \
+  [ForegroundColor(name, code) for name,code in zip(colors, range(30, 38))]
+fg_default = ForegroundColor('fg_default', 39)
+on_black, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white = \
+  [BackgroundColor(name, code) for name,code in zip(colors, range(40, 48))]
+on_default = BackgroundColor('on_default', 49)
+
+bold       = Style('bold',       1)
+underlined = Style('underlined', 4)
+blinking   = Style('blinking',   5)
+inverted   = Style('inverted',   7)
 
 default_state = State(39, 49, 0, False)
 screen_state  = default_state.copy()
