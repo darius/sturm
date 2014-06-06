@@ -23,7 +23,7 @@ def main():
                 if sliding:
                     for board in sliding:
                         sturm.render((heading, view(board)))
-                        time.sleep(1./30)
+                        time.sleep(1./25)
                     board = plop(board, 2 if random.random() < .9 else 4)
 
 # A board is a tuple of 4 rows;
@@ -42,20 +42,20 @@ def view(board):
 
 S = sturm
 tiles = {   0:                           '  . ',
-            2: S.yellow(                 '  2 '),
-            4: S.red(                    '  4 '),
-            8: S.blue(                   '  8 '),
-           16: S.green(                  ' 16 '),
-           32: S.bold(S.yellow(          ' 32 ')),
-           64: S.bold(S.red(             ' 64 ')),
-          128: S.bold(S.blue(            '128 ')),
+            2: S.white(S.on_blue(        '  2 ')),
+            4: S.white(S.on_magenta(     '  4 ')),
+            8: S.white(S.on_red(         '  8 ')),
+           16: S.black(S.on_cyan(        ' 16 ')),
+           32: S.black(S.on_green(       ' 32 ')),
+           64: S.black(S.on_yellow(      ' 64 ')),
+          128: S.bold(S.inverted(S.blue(S.on_yellow('128 ')))),
           256: S.bold(S.green(           '256 ')),
-          512: S.bold(S.yellow(S.on_blue('512 '))),
+          512: S.bold(S.blue(            '512 ')),
          1024: S.bold(S.red(S.on_green(  '1024'))),
          2048: S.bold(S.blue(S.on_red(   '2048')))}
 
 def is_won(board):
-    return any(row.count(2048) for row in board)
+    return any(row.count(2048) for row in board) # XXX anything >= 2048
 
 # Pre: board is not full.
 def plop(board, v):
