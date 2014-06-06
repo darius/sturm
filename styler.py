@@ -13,10 +13,12 @@ import sturm
 def main():
     with sturm.cbreak_mode():
         edit()
+        sturm.render('')
     dump()
 
 def dump():
-    print()
+    print('')
+    print('import sturm as S')
     print('styles = {}')
     for thing in mockup:
         if isinstance(thing, Cell):
@@ -87,12 +89,12 @@ class Cell(object):
         expr = repr(self.text)
         expr = uncall(self.bg, expr)
         expr = uncall(self.fg, expr)
-        for style in self.styles:
+        for style in sorted(self.styles): # (sorted for determinism)
             expr = uncall(style, expr)
         return expr
 
 def uncall(style, expr):
-    return 'sturm.%s(%s)' % (style.__name__, expr)
+    return 'S.%s(%s)' % (style.__name__, expr)
 
 ## x = Cell('hey')
 ## x.toggle(sturm.underlined)
