@@ -55,7 +55,8 @@ tiles = {   0:                           '  . ',
          2048: S.bold(S.blue(S.on_red(   '2048')))}
 
 def is_won(board):
-    return any(row.count(2048) for row in board) # XXX anything >= 2048
+    return any(any(2048 <= v for v in row)
+               for row in board)
 
 # Pre: board is not full.
 def plop(board, v):
