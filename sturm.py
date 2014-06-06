@@ -171,7 +171,7 @@ black, red, green, yellow, blue, magenta, cyan, white = \
   [ForegroundColor(name, code) for name,code in zip(colors, range(30, 38))]
 fg_default = ForegroundColor('fg_default', 39)
 on_black, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white = \
-  [BackgroundColor(name, code) for name,code in zip(colors, range(40, 48))]
+  [BackgroundColor('on_'+name, code) for name,code in zip(colors, range(40, 48))]
 on_default = BackgroundColor('on_default', 49)
 
 bold       = Style('bold',       1)
