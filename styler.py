@@ -83,9 +83,9 @@ class Cell(object):
         yield scene
 
     def dump(self):
-        print('styles[%r] = %s' % (self.text, self.export()))
+        print('styles[%r] = %s' % (self.text, self.uneval()))
 
-    def export(self):
+    def uneval(self):
         expr = repr(self.text)
         expr = uncall(self.bg, expr)
         expr = uncall(self.fg, expr)
@@ -99,7 +99,7 @@ def uncall(style, expr):
 ## x = Cell('hey')
 ## x.toggle(sturm.underlined)
 ## x.dump()
-#. styles['hey'] = sturm.underlined(sturm.fg_default(sturm.on_default('hey')))
+#. styles['hey'] = S.underlined(S.fg_default(S.on_default('hey')))
 
 def view(things, point):
     pos = 0
