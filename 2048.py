@@ -41,18 +41,18 @@ def view(board):
         yield '\n\n'
 
 S = sturm
-tiles = {   0:                           '  . ',
-            2: S.white(S.on_blue(        '  2 ')),
-            4: S.white(S.on_magenta(     '  4 ')),
-            8: S.white(S.on_red(         '  8 ')),
-           16: S.black(S.on_cyan(        ' 16 ')),
-           32: S.black(S.on_green(       ' 32 ')),
-           64: S.black(S.on_yellow(      ' 64 ')),
-          128: S.bold(S.inverted(S.blue(S.on_yellow('128 ')))),
-          256: S.bold(S.green(           '256 ')),
-          512: S.bold(S.blue(            '512 ')),
-         1024: S.bold(S.red(S.on_green(  '1024'))),
-         2048: S.bold(S.blue(S.on_red(   '2048')))}
+tiles = {   0:                                         '  . ',
+            2: S.on_blue(S.white(                      '  2 ')),
+            4: S.on_red(S.black(                       '  4 ')),
+            8: S.white(S.on_magenta(                   '  8 ')),
+           16: S.black(S.on_cyan(                      ' 16 ')),
+           32: S.black(S.on_green(                     ' 32 ')),
+           64: S.black(S.on_yellow(                    ' 64 ')),
+          128: S.black(S.on_white(                     '128 ')),
+          256: S.bold(S.blue(S.on_black(               '256 '))),
+          512: S.bold(S.magenta(S.on_black(            '512 '))),
+         1024: S.underlined(S.bold(S.red(S.on_black(   '1024')))),
+         2048: S.underlined(S.bold(S.yellow(S.on_black('2048'))))}
 
 def is_won(board):
     return any(any(2048 <= v for v in row)
