@@ -22,7 +22,7 @@ def main():
                 sliding = list(globals()[key](board))
                 if sliding:
                     for board in sliding:
-                        sturm.render((heading, view(board)))
+                        sturm.render((heading, view(board), score))
                         time.sleep(1./25)
                     board = plop(board, 2 if random.random() < .9 else 4)
 
