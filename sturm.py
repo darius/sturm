@@ -2,7 +2,7 @@
 Simple console terminal interaction.
 """
 
-import contextlib, os, select, sys, time
+import contextlib, errno, os, select, sys, time
 
 ROWS, COLS = 24, 80
 
