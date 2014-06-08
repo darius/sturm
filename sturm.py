@@ -67,6 +67,7 @@ def render(scene):
 
 def top_paint(scene):
     state = default_state.copy()
+    screen_state.cursor_seen = False
     paint(screen_state, state, scene)
     assert state == default_state
     paint(screen_state, state, '')
