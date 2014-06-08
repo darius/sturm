@@ -1,6 +1,6 @@
 """
 Produce all the dictionary words that can go into an anagram of
-the input text. Then take user's choice of a word and show the
+the input text. Then take the user's choice of a word and show the
 anagrams using it.
 
 Bare start; this could get lots fancier.
@@ -49,12 +49,19 @@ def view_words(lines, pos):
         yield '\n'
 
 def run_anagrams((word, rest)):
-    anagrams = extend((word,), '', rest, '')
-    anagrams = list(anagrams) + [['--done--']]
-    while True:
+    anagrams = []
+
+    def interact(timeout):
         sturm.render(view_anagrams(anagrams))
-        key = sturm.get_key()
-        if   key == sturm.esc: return
+        key = sturm.get_key(timeout)
+        return key != sturm.esc
+
+    for anagram in extend((word,), '', rest, ''):
+        anagrams.append(anagram)
+        if not interact(0): return
+    anagrams.append(('--done--',))
+    while interact(None):
+        pass
 
 def view_anagrams(anagrams):
     y = 0
