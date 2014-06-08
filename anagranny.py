@@ -3,10 +3,14 @@ Produce all the dictionary words that can go into an anagram of
 the input text. Then take the user's choice of a word and show the
 anagrams using it.
 
-Bare start; this could get lots fancier.
+Adapted from https://github.com/darius/languagetoys
+
+Bare start; needs lots of polish, etc..
 """
 
-import re, string, textwrap
+import heapq, re, string, textwrap
+
+import anagrampermute
 import sturm
 
 # Configure me by editing these constants:
@@ -35,7 +39,7 @@ def run(words):
         if   key == sturm.esc: return
         elif key == '\n':      run_anagrams(words[pos])
         elif key == 'left':    pos = (pos - 1) % len(words)
-        elif key == 'right':   pos = (pos + 1) % len(words)
+        elif key in ('right','\t'): pos = (pos + 1) % len(words)
 
 def view_words(lines, pos):
     i = 0
@@ -57,20 +61,21 @@ def run_anagrams((word, rest)):
         return key != sturm.esc
 
     for anagram in extend((word,), '', rest, ''):
-        anagrams.append(anagram)
-        if not interact(0): return
-    anagrams.append(('--done--',))
+        for words in cross_product([dictionary[p] for p in anagram[1:]]):
+            words = [anagram[0]] + words
+            anagrams.append(anagrampermute.best_permutation(words))
+            if not interact(0): return
+    anagrams.append((0, ('--done--',)))
     while interact(None):
         pass
 
 def view_anagrams(anagrams):
     y = 0
-    for anagram in anagrams:
-        for words in cross_product([dictionary[p] for p in anagram[1:]]):
-            if y == sturm.ROWS-1: break
-            yield ' '.join([anagram[0]] + words)
-            yield '\n'
-            y += 1
+    for score,words in heapq.nlargest(sturm.ROWS-1, anagrams):
+#        if y == sturm.ROWS-1: break
+        yield ' '.join(words)
+        yield '\n'
+        y += 1
 
 def cross_product(lists):
     if not lists:
