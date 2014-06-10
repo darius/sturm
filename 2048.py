@@ -73,9 +73,8 @@ def update(board, pos, new_v):
                        for c, v in enumerate(row))
                  for r, row in enumerate(board))
 
-def flipv(board): return board[::-1]                # vertical flip
-def flipd(board): return tuple(zip(*board))         # diagonal
-def fliph(board): return flipd(flipv(flipd(board))) # horizontal
+def flipd(board): return tuple(zip(*board))                # diagonal flip
+def fliph(board): return tuple(row[::-1] for row in board) # horizontal
 
 # Arrow-key actions. Each returns an iterable of boards animating
 # the move, an empty iterable if there's no move in that direction.
