@@ -129,13 +129,6 @@ dictionary, dictionary_prefixes = None, None
 ## pt('hello') in dictionary_prefixes, pt('hello') in dictionary
 #. (True, True)
 
-def write_anagram_words(s):
-    names = (name for name,rest in gen_anagram_words(s))
-    words = sorted(set(word for name in names for word in dictionary[name]))
-    text = ' '.join(words)
-    for line in textwrap.wrap(text):
-        print line
-
 def gen_anagram_words(s):
     "Generate the pigeonhole names possible in anagrams of s."
     bag = extract_letters(s)
