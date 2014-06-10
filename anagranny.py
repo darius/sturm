@@ -9,8 +9,9 @@ Bare start; needs lots of polish, etc..
 """
 
 import heapq, re, string, textwrap
+from itertools import permutations
 
-import anagrampermute
+from pdist import cPw
 import sturm
 
 # Configure me by editing these constants:
@@ -63,7 +64,7 @@ def run_anagrams((word, rest)):
     for anagram in extend((word,), '', rest, ''):
         for words in cross_product([dictionary[p] for p in anagram[1:]]):
             words = [anagram[0]] + words
-            anagrams.append(anagrampermute.best_permutation(words))
+            anagrams.append(best_permutation(words))
             if not interact(0): return
     anagrams.append((0, ('--done--',)))
     while interact(None):
@@ -84,6 +85,24 @@ def cross_product(lists):
         for xs in cross_product(lists[1:]):
             for x in lists[0]:
                 yield [x] + xs
+
+def best_permutation(words):
+    return max(map(bigram_score, permutations(words)))
+
+cache = {}
+
+def bigram_score(words):
+    P = 1
+    prev = '<S>'
+    for word in words:
+        key = prev + ' ' + word
+        if key not in cache:
+            if 100000 < len(cache):
+                cache.clear()   # Keep memory use bounded
+            cache[key] = cPw(word, prev)
+        P *= cache[key]
+        prev = word
+    return P, words
 
 def pigeonhole(word):
     "Two words have the same pigeonhole iff they're anagrams of each other."
