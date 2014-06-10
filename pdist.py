@@ -1,5 +1,6 @@
 """
 Some code taken from Peter Norvig's forthcoming article for _Beautiful Data_.
+(I've messed with it a little, especially the data.)
 """
 
 import re, string, random, glob, operator, heapq
