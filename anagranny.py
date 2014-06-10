@@ -26,11 +26,10 @@ def main(argv):
         run(collect_words(source))
 
 def collect_words(source):
-    lows, ups = [], []
-    for name,rest in gen_anagram_words(source):
-        for word in dictionary[name]:
-            (ups if word[:1].isupper() else lows).append((word, rest))
-    return lows + ups
+    return [(word,rest)
+            for _,word,rest in sorted((word[:1].isupper(), word, rest)
+                                      for name,rest in gen_anagram_words(source)
+                                      for word in dictionary[name])]
     
 def run(words):
     lines = [line.split() for line in textwrap.wrap(' '.join(word for word,_ in words),
