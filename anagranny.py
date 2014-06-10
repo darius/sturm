@@ -33,7 +33,7 @@ def collect_words(source):
     
 def run(words):
     lines = [line.split() for line in textwrap.wrap(' '.join(word for word,_ in words),
-                                                    sturm.COLS)]
+                                                    sturm.COLS-1)]
     pos = 0
     while True:
         sturm.render(view_words(lines, pos))
