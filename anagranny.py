@@ -8,8 +8,8 @@ Adapted from https://github.com/darius/languagetoys
 Bare start; needs lots of polish, etc..
 """
 
-import heapq, re, string, textwrap
-from itertools import permutations
+import re, string
+from itertools import permutations, izip_longest
 
 from pdist import cPw
 import sturm
@@ -32,52 +32,47 @@ def collect_words(source):
                                       for word in dictionary[name])]
     
 def run(words):
-    lines = [line.split() for line in textwrap.wrap(' '.join(word for word,_ in words),
-                                                    sturm.COLS-1)]
+    words_width = max(len(word) for word,_ in words) # N.B. assumes >=1 word
     pos = 0
+    anagrams, anagrams_iter = [], gen_anagrams(words[pos])
+    nrows, ncols = sturm.ROWS-1, sturm.COLS-1
+
+    def view():
+        page = (pos // nrows) * nrows
+        words_pane = [word for word,_ in words[page:page+nrows]]
+        grams_pane = [gram for _,gram in anagrams[:nrows]]
+        for r, (word, gram) in enumerate(izip_longest(words_pane, grams_pane, fillvalue='')):
+            if page+r == pos: yield sturm.cursor
+            yield word.ljust(words_width), ' ', ' '.join(gram), '\n'
+
+    new_pos = pos
     while True:
-        sturm.render(view_words(lines, pos))
-        key = sturm.get_key()
-        if   key == sturm.esc: return
-        elif key == '\n':      run_anagrams(words[pos])
-        elif key == 'left':    pos = (pos - 1) % len(words)
-        elif key in ('right','\t'): pos = (pos + 1) % len(words)
+        if pos != new_pos % len(words):
+            pos = new_pos % len(words)
+            anagrams, anagrams_iter = [], gen_anagrams(words[pos])
+        sturm.render(view())
+        key = sturm.get_key(0)
+        if key is None:
+            for gram in anagrams_iter:
+                anagrams.append(gram)
+                break
+            anagrams.sort(reverse=True)
+        elif key == sturm.esc:
+            return
+        elif key == 'up':
+            new_pos = pos - 1
+        elif key in ('down','\t'):
+            new_pos = pos + 1
+        elif key == 'pgup':
+            new_pos = ((pos // nrows) - 1) * nrows
+        elif key == 'pgdn':
+            new_pos = ((pos // nrows) + 1) * nrows
 
-def view_words(lines, pos):
-    i = 0
-    for y, line in enumerate(lines):
-        if y == sturm.ROWS-1: break
-        for x, word in enumerate(line):
-            if x: yield ' '
-            if i == pos: yield sturm.cursor
-            yield word
-            i += 1
-        yield '\n'
-
-def run_anagrams((word, rest)):
-    anagrams = []
-
-    def interact(timeout):
-        sturm.render(view_anagrams(anagrams))
-        key = sturm.get_key(timeout)
-        return key != sturm.esc
-
+def gen_anagrams((word, rest)):
     for anagram in extend((word,), '', rest, ''):
         for words in cross_product([dictionary[p] for p in anagram[1:]]):
             words = [anagram[0]] + words
-            anagrams.append(best_permutation(words))
-            if not interact(0): return
-    anagrams.append((0, ('--done--',)))
-    while interact(None):
-        pass
-
-def view_anagrams(anagrams):
-    y = 0
-    for score,words in heapq.nlargest(sturm.ROWS-1, anagrams):
-#        if y == sturm.ROWS-1: break
-        yield ' '.join(words)
-        yield '\n'
-        y += 1
+            yield best_permutation(words)
 
 def cross_product(lists):
     if not lists:
