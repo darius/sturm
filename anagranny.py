@@ -52,18 +52,12 @@ def run(words):
             anagrams = Anagrams(gen_anagrams(words[pos]))
         sturm.render(view())
         key = sturm.get_key(None if anagrams.done else 0)
-        if key is None:
-            anagrams.grow()
-        elif key == sturm.esc:
-            return
-        elif key == 'up':
-            new_pos = pos - 1
-        elif key in ('down','\t'):
-            new_pos = pos + 1
-        elif key == 'pgup':
-            new_pos = ((pos // nrows) - 1) * nrows
-        elif key == 'pgdn':
-            new_pos = ((pos // nrows) + 1) * nrows
+        if key is None:            anagrams.grow()
+        elif key == sturm.esc:     return
+        elif key == 'up':          new_pos = pos - 1
+        elif key in ('down','\t'): new_pos = pos + 1
+        elif key == 'pgup':        new_pos = ((pos // nrows) - 1) * nrows
+        elif key == 'pgdn':        new_pos = ((pos // nrows) + 1) * nrows
 
 class Anagrams(object):
     def __init__(self, gen):
