@@ -40,6 +40,8 @@ def run(words):
         for r, (word, gram) in enumerate(izip_longest(words_pane, grams_pane, fillvalue='')):
             if page+r == pos: yield sturm.cursor
             yield word.ljust(words_width), ' ', ' '.join(gram), '\n'
+        if anagrams.done:
+            yield ' '*words_width, ' ', '--done--'
 
     pos, new_pos = None, 0
     while True:
