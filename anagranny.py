@@ -32,15 +32,15 @@ def collect_words(source):
                                       for word in dictionary[name])]
     
 def run(words):
+    nrows, ncols = sturm.ROWS-1, sturm.COLS-1
     words_width = max(len(word) for word,_ in words) # N.B. assumes >=1 word
     pos = 0
-    anagrams, anagrams_iter = [], gen_anagrams(words[pos])
-    nrows, ncols = sturm.ROWS-1, sturm.COLS-1
+    anagrams = Anagrams(gen_anagrams(words[pos]))
 
     def view():
         page = (pos // nrows) * nrows
         words_pane = [word for word,_ in words[page:page+nrows]]
-        grams_pane = [gram for _,gram in anagrams[:nrows]]
+        grams_pane = anagrams.top(nrows)
         for r, (word, gram) in enumerate(izip_longest(words_pane, grams_pane, fillvalue='')):
             if page+r == pos: yield sturm.cursor
             yield word.ljust(words_width), ' ', ' '.join(gram), '\n'
@@ -49,14 +49,11 @@ def run(words):
     while True:
         if pos != new_pos % len(words):
             pos = new_pos % len(words)
-            anagrams, anagrams_iter = [], gen_anagrams(words[pos])
+            anagrams = Anagrams(gen_anagrams(words[pos]))
         sturm.render(view())
-        key = sturm.get_key(0)
+        key = sturm.get_key(None if anagrams.done else 0)
         if key is None:
-            for gram in anagrams_iter:
-                anagrams.append(gram)
-                break
-            anagrams.sort(reverse=True)
+            anagrams.grow()
         elif key == sturm.esc:
             return
         elif key == 'up':
@@ -67,6 +64,20 @@ def run(words):
             new_pos = ((pos // nrows) - 1) * nrows
         elif key == 'pgdn':
             new_pos = ((pos // nrows) + 1) * nrows
+
+class Anagrams(object):
+    def __init__(self, gen):
+        self.gen = gen
+        self.done = False
+        self.results = []
+    def grow(self):
+        for result in self.gen:
+            self.results.append(result)
+            self.results.sort(reverse=True)
+            return
+        self.done = True
+    def top(self, n):
+        return [gram for _,gram in self.results[:n]]
 
 def gen_anagrams((word, rest)):
     for anagram in extend((word,), '', rest, ''):
