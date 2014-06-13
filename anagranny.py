@@ -8,7 +8,7 @@ Adapted from https://github.com/darius/languagetoys
 Bare start; needs lots of polish, etc..
 """
 
-import re, string
+import re, string, time
 from itertools import permutations, izip_longest
 
 from pdist import cPw
@@ -34,25 +34,23 @@ def collect_words(source):
 def run(words):
     nrows, ncols = sturm.ROWS-1, sturm.COLS-1
     words_width = max(len(word) for word,_ in words) # N.B. assumes >=1 word
-    pos = 0
-    anagrams = Anagrams(gen_anagrams(words[pos]))
 
     def view():
-        page = (pos // nrows) * nrows
-        words_pane = [word for word,_ in words[page:page+nrows]]
         grams_pane = anagrams.top(nrows)
         for r, (word, gram) in enumerate(izip_longest(words_pane, grams_pane, fillvalue='')):
             if page+r == pos: yield sturm.cursor
             yield word.ljust(words_width), ' ', ' '.join(gram), '\n'
 
-    new_pos = pos
+    pos, new_pos = None, 0
     while True:
         if pos != new_pos % len(words):
             pos = new_pos % len(words)
+            page = (pos // nrows) * nrows
+            words_pane = [word for word,_ in words[page:page+nrows]]
             anagrams = Anagrams(gen_anagrams(words[pos]))
         sturm.render(view())
         key = sturm.get_key(None if anagrams.done else 0)
-        if key is None:            anagrams.grow()
+        if   key is None:          anagrams.grow()
         elif key == sturm.esc:     return
         elif key == 'up':          new_pos = pos - 1
         elif key in ('down','\t'): new_pos = pos + 1
@@ -65,11 +63,15 @@ class Anagrams(object):
         self.done = False
         self.results = []
     def grow(self):
+        start = time.time()
         for result in self.gen:
             self.results.append(result)
-            self.results.sort(reverse=True)
+            if start + 0.05 < time.time():
+                break
+        else:
+            self.done = True
             return
-        self.done = True
+        self.results.sort(reverse=True)
     def top(self, n):
         return [gram for _,gram in self.results[:n]]
 
