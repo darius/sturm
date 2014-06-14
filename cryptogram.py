@@ -13,13 +13,20 @@ def main():
 def puzzle(cryptogram):
     def my(): pass        # A hack to get a mutable-nonlocal variable.
     my.cursor = 0
-    decoder = {}
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
+    decoder = {c: ' ' for c in set(code)}
 
     def erase():          jot(' ')
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
+
+    def shift_to_space():
+        if ' ' in decoder.values():
+            while True:
+                shift_by(1)
+                if ' ' == decoder[code[my.cursor]]:
+                    break
 
     def view():
         # Assume 1 line, for now.
@@ -50,6 +57,8 @@ def puzzle(cryptogram):
         elif key == 'del':
             erase()
             shift_by(1)
+        elif key == '\t':
+            shift_to_space()
 
 if __name__ == '__main__':
     main()
