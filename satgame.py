@@ -22,16 +22,17 @@ def main():
     with sturm.cbreak_mode():
         play(games)
 
+instructions = """\
+To win, put a * in every column. (Columns with no *'s are yellow.)
+Flip O's and *'s in a row by typing its key (listed on the left and right edges).
+Press Tab to cycle to the next game, Esc to quit."""
+
 def play(games):
     game_num = 0
     while True:
         game = games[game_num]
-        sturm.render(("To win, put a * in every column. (Columns with no *'s are yellow.)\n",
-                      "Flip O's and *'s in a row by typing its key (listed on the left and right edges).\n",
-                      "Press Tab to cycle to the next game, Esc to quit.\n",
-                      "\n",
-                      game.view(),
-                      "\n",
+        sturm.render((instructions, "\n\n",
+                      game.view(), "\n",
                       "You win!" if game.is_solved() else ""))
         key = sturm.get_key()
         if key == sturm.esc:
