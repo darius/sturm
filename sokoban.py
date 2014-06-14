@@ -120,7 +120,7 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         filename = sys.argv[1]
     else:
-        print("Usage: ppython %s [filename]" % sys.argv[0])
+        print("Usage: python %s [filename]" % sys.argv[0])
 
     with open(filename) as f:
         name = f.readline().rstrip('\n')
