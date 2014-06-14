@@ -61,7 +61,7 @@ def puzzle(cryptogram):
         pos = itertools.count(0)
         for c in cryptogram:
             if c.isalpha() and next(pos) == my.cursor: yield sturm.cursor
-            yield decoder.get(c, ' ')
+            yield decoder.get(c, c)
         yield '\n'
         yield ''.join(' -'[c.isalpha()] for c in cryptogram) + '\n'
         yield cryptogram + '\n\n'
