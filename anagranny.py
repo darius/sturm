@@ -141,7 +141,7 @@ def usable_pattern(subject):
     if subject is None:
         return lambda word: True
     alphabet = set(extract_letters(subject))
-    pattern = re.compile('([%s]|\W)+$' % ''.join(alphabet), re.I)
+    pattern = re.compile(r'([%s]|\W)+$' % ''.join(alphabet), re.I)
     return pattern.match
 
 dictionary, dictionary_prefixes = None, None
