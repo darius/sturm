@@ -26,13 +26,13 @@ def play(games):
     game_num = 0
     while True:
         game = games[game_num]
-        sturm.render((game.view(),
-                      "\n",
-                      ("You win!" if game.is_solved() else "") + "\n",
-                      "\n",
-                      "To win, put a * in every column. (Columns with no *'s appear in yellow.)\n",
+        sturm.render(("To win, put a * in every column. (Columns with no *'s are yellow.)\n",
                       "Flip O's and *'s in a row by typing its key (listed on the left and right edges).\n",
-                      'Press Tab to cycle to the next game, Esc to quit.\n'))
+                      "Press Tab to cycle to the next game, Esc to quit.\n",
+                      "\n",
+                      game.view(),
+                      "\n",
+                      "You win!" if game.is_solved() else ""))
         key = sturm.get_key()
         if key == sturm.esc:
             break
