@@ -3,7 +3,7 @@ A UI for cryptogram puzzles.
 Incomplete in many ways.
 """
 
-import commands, itertools, random, string, sys
+import collections, commands, itertools, random, string, sys
 import sturm
 
 def main(argv):
@@ -55,7 +55,12 @@ def puzzle(cryptogram):
                 if ' ' == decoder[code[my.cursor]]:
                     break
 
+    def find_clashes():
+        counts = collections.Counter(v for v in decoder.values() if v != ' ')
+        return set(v for v,n in counts.items() if 1 < n)
+
     def view():
+        clashes = find_clashes()
         # Assume 1 line, for now.
         yield '\n'
         pos = itertools.count(0)
@@ -64,7 +69,9 @@ def puzzle(cryptogram):
             yield decoder.get(c, c)
         yield '\n'
         yield ''.join(' -'[c.isalpha()] for c in cryptogram) + '\n'
-        yield cryptogram + '\n\n'
+        for c in cryptogram:
+            yield sturm.red(c) if decoder.get(c) in clashes else c
+        yield '\n\n'
 
     while True:
         sturm.render(view())
