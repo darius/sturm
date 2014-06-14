@@ -14,8 +14,7 @@ import sturm
 filenames = ['sat/trivial.dimacs',
              'sat/factoring6.dimacs',
              'sat/factoring2.dimacs',
-             'sat/subsetsum_random.dimacs',
-             ]
+             'sat/subsetsum_random.dimacs']
 
 def main():
     games = [Game(problem) for _,problem in map(dimacs.load, filenames)]
