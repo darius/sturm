@@ -51,14 +51,14 @@ def puzzle(cryptogram):
             shift_by(1)
         elif key == 'left':
             shift_by(-1)
+        elif key == '\t':
+            shift_to_space()
         elif key == 'backspace':
             shift_by(-1)
             erase()
         elif key == 'del':
             erase()
             shift_by(1)
-        elif key == '\t':
-            shift_to_space()
 
 if __name__ == '__main__':
     main()
