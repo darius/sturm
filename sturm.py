@@ -43,7 +43,7 @@ def mode(name):       # 'raw' or 'cbreak'
     try:
         yield
     finally:
-        sys.stdout.write(cursor_show)
+        sys.stdout.write(cursor_show + '\n')
         os.system('stty sane') # XXX save and restore instead
 
 def write(s):
