@@ -121,6 +121,7 @@ if __name__ == '__main__':
         filename = sys.argv[1]
     else:
         print("Usage: python %s [filename]" % sys.argv[0])
+        sys.exit(1)
 
     with open(filename) as f:
         name = f.readline().rstrip('\n')
