@@ -78,20 +78,19 @@ def puzzle(cryptogram):
         key = sturm.get_key()
         if   key == sturm.esc:
             break
-        elif key in string.ascii_letters + ' ':
-            jot(key)
-            shift_by(1)
-        elif key == 'right':
-            shift_by(1)
-        elif key == 'left':
-            shift_by(-1)
-        elif key == '\t':
-            shift_to_space()
+        elif key == 'right': shift_by(1)
+        elif key == 'left':  shift_by(-1)
+        elif key == '\t':    shift_to_space()
+        elif key == 'home':  my.cursor = 0
+        elif key == 'end':   my.cursor = len(code)-1
         elif key == 'backspace':
             shift_by(-1)
             erase()
         elif key == 'del':
             erase()
+            shift_by(1)
+        elif key in string.ascii_letters + ' ':
+            jot(key)
             shift_by(1)
 
 if __name__ == '__main__':
