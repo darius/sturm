@@ -11,11 +11,11 @@ Bare start; needs lots of polish, etc..
 import re, string, time
 from itertools import permutations, izip_longest
 
-from pdist import cPw
+from anagrams.pdist import cPw
 import sturm
 
 # Configure me by editing these constants:
-dict_filename = 'wordlist.txt'
+dict_filename = 'anagrams/wordlist.txt'
 
 def main(argv):
     source = ' '.join(argv[1:]).lower()
