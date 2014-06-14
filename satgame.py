@@ -47,19 +47,15 @@ def play(games):
 class Game(object):
 
     def __init__(self, problem):
-        self.problem = problem
         variables = sat.problem_variables(problem)
-        self.env = {v: False for v in variables}
-        self.labels = ('1234567890' + string.ascii_uppercase)[:len(variables)]
+        names = '1234567890' + string.ascii_uppercase
+        self.problem   = problem
+        self.env       = {v: False for v in variables}
+        self.names     = dict(zip(names, variables))
+        self.variables = dict(zip(variables, names))
 
-    def name_of_variable(self, v):
-        return self.labels[v-1]
-
-    def variable_of_name(self, label):
-        try:
-            return self.labels.index(label.upper()) + 1
-        except ValueError:
-            return None
+    def variable_of_name(self, name):
+        return self.names.get(name.upper())
 
     def is_solved(self):
         return sat.is_satisfied(self.problem, self.env)
@@ -79,13 +75,13 @@ class Game(object):
             color = satisfied if self.clause_is_satisfied(clause) else unsatisfied
             return color(mark)
 
-        for v in sat.problem_variables(self.problem):
+        for v in self.variables:
             v_color = row_true if self.env[v] else row_false
-            label = v_color(self.name_of_variable(v))
-            yield label, ' '
+            name = v_color(self.variables[v])
+            yield name, ' '
             for clause in self.problem:
                 yield present(v, clause)
-            yield ' ', label, '\n'
+            yield ' ', name, '\n'
 
 
 def compose(*fns): return reduce(compose2, fns)
