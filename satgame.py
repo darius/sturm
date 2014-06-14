@@ -49,7 +49,7 @@ class Game(object):
     def __init__(self, problem):
         self.problem = problem
         variables = sat.problem_variables(problem)
-        self.env = dict((v, False) for v in variables)
+        self.env = {v: False for v in variables}
         self.labels = ('1234567890' + string.ascii_uppercase)[:len(variables)]
 
     def name_of_variable(self, v):
