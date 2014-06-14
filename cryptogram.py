@@ -8,7 +8,7 @@ import sturm
 
 def main(argv):
     if   len(argv) == 1:
-        cryptogram = random_encrypt(fortune())
+        cryptogram = random_encrypt(shell_run('fortune'))
     elif len(argv) == 2:
         cryptogram = argv[1]
     else:
@@ -23,12 +23,6 @@ def random_encrypt(text):
     values = list(keys); random.shuffle(values)
     code = dict(zip(keys, values))
     return ''.join(code.get(c, c) for c in text)
-
-def fortune():
-    while True:
-        text = shell_run('fortune')
-        if '\n' not in text: # (This lame-o program can only display one-liners still.)
-            return text
 
 def shell_run(command):
     err, output = commands.getstatusoutput(command)
@@ -61,17 +55,18 @@ def puzzle(cryptogram):
 
     def view():
         clashes = find_clashes()
-        # Assume 1 line, for now.
-        yield '\n'
         pos = itertools.count(0)
-        for c in cryptogram:
-            if c.isalpha() and next(pos) == my.cursor: yield sturm.cursor
-            yield decoder.get(c, c)
-        yield '\n'
-        yield ''.join(' -'[c.isalpha()] for c in cryptogram) + '\n'
-        for c in cryptogram:
-            yield sturm.red(c) if decoder.get(c) in clashes else c
-        yield '\n\n'
+        for line in cryptogram.splitlines():
+            line = line.replace('\t', ' ') # XXX formatting hack
+            yield '\n'
+            for c in line:
+                if c.isalpha() and next(pos) == my.cursor: yield sturm.cursor
+                yield decoder.get(c, c)
+            yield '\n'
+            yield ''.join(' -'[c.isalpha()] for c in line) + '\n'
+            for c in line:
+                yield sturm.red(c) if decoder.get(c) in clashes else c
+            yield '\n'
 
     while True:
         sturm.render(view())
