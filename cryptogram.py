@@ -3,12 +3,39 @@ A UI for cryptogram puzzles.
 Incomplete in many ways.
 """
 
-import itertools, string
+import commands, itertools, random, string, sys
 import sturm
 
-def main():
+def main(argv):
+    if   len(argv) == 1:
+        cryptogram = random_encrypt(fortune())
+    elif len(argv) == 2:
+        cryptogram = argv[1]
+    else:
+        print("Usage: python %s [cryptogram]" % sys.argv[0])
+        sys.exit(1)
     with sturm.cbreak_mode():
-        puzzle('nggnpx ng qnja')
+        puzzle(cryptogram)
+
+def random_encrypt(text):
+    text = text.lower()
+    keys = string.ascii_lowercase
+    values = list(keys); random.shuffle(values)
+    code = dict(zip(keys, values))
+    return ''.join(code.get(c, c) for c in text)
+
+def fortune():
+    while True:
+        text = shell_run('fortune')
+        if '\n' not in text: # (This lame-o program can only display one-liners still.)
+            return text
+
+def shell_run(command):
+    err, output = commands.getstatusoutput(command)
+    if err:
+        print(output)
+        sys.exit(1)
+    return output
 
 def puzzle(cryptogram):
     def my(): pass        # A hack to get a mutable-nonlocal variable.
@@ -44,7 +71,7 @@ def puzzle(cryptogram):
         key = sturm.get_key()
         if   key == sturm.esc:
             break
-        elif key in string.ascii_letters:
+        elif key in string.ascii_letters + ' ':
             jot(key)
             shift_by(1)
         elif key == 'right':
@@ -61,4 +88,4 @@ def puzzle(cryptogram):
             shift_by(1)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
