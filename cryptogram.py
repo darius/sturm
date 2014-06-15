@@ -29,7 +29,7 @@ def fortune():
         text = shell_run('fortune')
         lines = text.splitlines()
         # Will it fit? TODO: cleaner to actually try to render it.
-        if 5 * len(lines) < sturm.ROWS and max(map(len, lines)) < sturm.COLS:
+        if 4 * len(lines) < sturm.ROWS-1 and max(map(len, lines)) < sturm.COLS:
             return text
 
 def shell_run(command):
