@@ -8,14 +8,14 @@ import sturm
 
 def main(argv):
     if   len(argv) == 1:
-        cryptogram = random_encrypt(shell_run('fortune'))
+        make_cryptogram = lambda: random_encrypt(fortune())
     elif len(argv) == 2:
-        cryptogram = argv[1]
+        make_cryptogram = lambda: argv[1]
     else:
         print("Usage: python %s [cryptogram]" % sys.argv[0])
         sys.exit(1)
     with sturm.cbreak_mode():
-        puzzle(cryptogram)
+        puzzle(make_cryptogram())
 
 def random_encrypt(text):
     text = text.lower()
@@ -23,6 +23,14 @@ def random_encrypt(text):
     values = list(keys); random.shuffle(values)
     code = dict(zip(keys, values))
     return ''.join(code.get(c, c) for c in text)
+
+def fortune():
+    while True:
+        text = shell_run('fortune')
+        lines = text.splitlines()
+        # Will it fit? TODO: cleaner to actually try to render it.
+        if 5 * len(lines) < sturm.ROWS and max(map(len, lines)) < sturm.COLS:
+            return text
 
 def shell_run(command):
     err, output = commands.getstatusoutput(command)
