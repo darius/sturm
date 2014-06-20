@@ -40,10 +40,10 @@ def tictactoe(player, opponent, grid=None):
     while True:
         if is_won(grid):
             _, winner = player_marks(grid)
-            sturm.render(view(grid) + "\n\n%s wins.\n" % winner)
+            sturm.render(view(grid) + "\n\n%s wins." % winner)
             break
         if not successors(grid):
-            sturm.render(view(grid) + "\n\nA draw.\n")
+            sturm.render(view(grid) + "\n\nA draw.")
             break
         if human_play not in (player, opponent):
             sturm.render(view(grid) + ("\n\n%s to move %s. (Press a key.)"
@@ -79,8 +79,8 @@ def human_play(grid):
     plaint = ''
     prompt = whose_move(grid) + " move? [1-9] "
     while True:
-        sturm.render((view(grid) + "\n\n" + plaint + prompt,
-                      sturm.cursor))
+        sturm.render((view_valid_moves(grid) if plaint else view(grid), "\n\n",
+                      plaint, prompt, sturm.cursor))
         key = sturm.get_key()
         if key == sturm.esc: sys.exit()
         try:
@@ -91,11 +91,16 @@ def human_play(grid):
             if 1 <= move <= 9:
                 successor = apply_move(grid, from_human_move(move))
                 if successor: return successor
-        plaint = ("Hey, that's illegal. Give me one of these digits:\n\n"
-                  + (grid_format
-                     % tuple(move if apply_move(grid, from_human_move(move)) else '-'
-                             for move in range(1, 10))
-                     + '\n\n'))
+        plaint = ("Hey, that's illegal. Give me one of the above digits.\n\n")
+
+def view_valid_moves(grid):
+    moves = iter(range(1, 10))
+    for c in view(grid):
+        if c.isspace():
+            yield c
+        else:
+            move = next(moves)
+            yield sturm.green(str(move)) if c == '.' else c
 
 grid_format = '\n'.join([' %s %s %s'] * 3)
 
