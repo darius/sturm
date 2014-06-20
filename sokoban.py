@@ -65,7 +65,7 @@ def play(grids, name='', level=0):
                 yield ""
                 yield "Done!"
 
-        sturm.render('\n'.join(frame()) + '\n')
+        sturm.render('\n'.join(frame()))
         key = sturm.get_key().lower()
         if   key == 'q':
             break
