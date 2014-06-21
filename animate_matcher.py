@@ -6,7 +6,7 @@ import sturm
 
 def main():
     with sturm.cbreak_mode():
-        run(['rat', 'cat'], 'cats are fat')
+        run(['rat', 'cat', 'catalog'], 'cats are fat')
 
 def run(patterns, string):
     i = 0
@@ -14,16 +14,16 @@ def run(patterns, string):
     tails = patterns
 
     while True:
-        sturm.render(((pattern + '\n' for pattern in sorted(tails)),
-                      '\n',
-                      string[:i], sturm.cursor, string[i:], '\n',
-                      'matched' if matched else ''))
+        show_states = (((pattern or sturm.green('match!')), '\n')
+                       for pattern in sorted(tails))
+        sturm.render((show_states, '\n',
+                      string[:i], sturm.cursor, string[i:]))
         key = sturm.get_key()
         if key == sturm.esc: break
-        if matched or i == len(string): break
+        if i == len(string): break
 
         ch = string[i]
-        tails = [tail[1:] for tail in tails if tail[0] == ch]
+        tails = [tail[1:] for tail in tails if tail.startswith(ch)]
         matched = not all(tails)
         i += 1
 
