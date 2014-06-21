@@ -28,9 +28,9 @@ def page(f):
         if not c: return
         write(c)
         if sturm.ROWS-1 <= row:
-            sturm.write("--more--")
+            sturm.write(sturm.sgr(7) + "--more--") # XXX refactor sturm.inverted so we can use it
             k = sturm.get_key()
-            sturm.write('\b' * len("--more--"))
+            sturm.write(sturm.sgr(0) + '\b' * len("--more--"))
             if k.upper() in ('Q', sturm.esc):
                 sys.exit()
             row, col = 0, 0
