@@ -45,6 +45,8 @@ def puzzle(cryptogram):
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
     decoder = {c: ' ' for c in set(code)}
+    lines = [line.replace('\t', ' ') # XXX formatting hack
+             for line in cryptogram.splitlines()]
 
     def erase():          jot(' ')
     def jot(letter):      decoder[code[my.cursor]] = letter
@@ -64,8 +66,8 @@ def puzzle(cryptogram):
     def view():
         clashes = find_clashes()
         pos = itertools.count(0)
-        for line in cryptogram.splitlines():
-            line = line.replace('\t', ' ') # XXX formatting hack
+        at_c = code[my.cursor]
+        for line in lines:
             yield '\n'
             for c in line:
                 if c.isalpha() and next(pos) == my.cursor: yield sturm.cursor
@@ -73,7 +75,10 @@ def puzzle(cryptogram):
             yield '\n'
             yield ''.join(' -'[c.isalpha()] for c in line) + '\n'
             for c in line:
-                yield sturm.red(c) if decoder.get(c) in clashes else c
+                color = (sturm.red if decoder.get(c) in clashes
+                         else sturm.green if c == at_c
+                         else lambda x: x)
+                yield color(c)
             yield '\n'
 
     while True:
