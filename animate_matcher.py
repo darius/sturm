@@ -13,10 +13,11 @@ def run(patterns, string):
     tails = patterns
 
     while True:
-        show_states = (((pattern or sturm.green('match!')), '\n')
+        show_states = ((' '*i, pattern or sturm.green('match!'), '\n')
                        for pattern in sorted(tails))
-        sturm.render((show_states, '\n',
-                      string[:i], sturm.cursor, string[i:]))
+        sturm.render((string[:i], sturm.cursor, string[i:], '\n\n',
+                      show_states))
+                      
         key = sturm.get_key()
         if key == sturm.esc: break
         if i == len(string): break
