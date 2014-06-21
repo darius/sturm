@@ -10,7 +10,6 @@ def main():
 
 def run(patterns, string):
     i = 0
-    matched = not all(patterns)
     tails = patterns
 
     while True:
@@ -24,7 +23,6 @@ def run(patterns, string):
 
         ch = string[i]
         tails = [tail[1:] for tail in tails if tail.startswith(ch)]
-        matched = not all(tails)
         i += 1
 
 # From github.com/darius/regexercise_solutions -- this is the logic
