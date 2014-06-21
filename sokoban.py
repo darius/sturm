@@ -55,17 +55,26 @@ def play(grids, name='', level=0):
         grid, trail = grids[level], trails[level]
 
         def frame():
-            yield "Move with the arrow keys or HJKL. U to undo."
-            yield "N/P for next/previous level; Q to quit."
-            yield ""
-            yield "Level {} {:^50} Move {}".format(level+1, name, len(trail))
-            yield ""
-            yield unparse(grid)
-            if won(grid):
-                yield ""
-                yield "Done!"
+            heading = """\
+Move with the arrow keys or HJKL. U to undo.
+N/P for next/previous level; Q to quit.
 
-        sturm.render('\n'.join(frame()))
+Level {} {:^50} Move {}
+
+"""
+            yield heading.format(level+1, name, len(trail))
+            yield view_grid()
+            if won(grid):
+                yield "\n\nDone!"
+
+        def view_grid():
+            for c in unparse(grid):
+                color = sturm.unstyled
+                if c in 'iI': color = sturm.green
+                if c in '.I@': color = sturm.compose(sturm.bold, color)
+                yield color(c)
+
+        sturm.render(frame())
         key = sturm.get_key().lower()
         if   key == 'q':
             break
