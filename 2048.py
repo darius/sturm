@@ -11,15 +11,15 @@ def main():
     with sturm.cbreak_mode():
         board = make_board()
         while True:
+            game_over = not any(list(move(board)) for move in arrows.values())
             heading = "Use the arrow keys, or Q to quit.\n\n"
-            game_over = not any(list(move(board)) for move in [up,down,left,right])
             score = "You win!" if is_won(board) else "You lose!" if game_over else ""
             sturm.render((heading, view(board), score))
             if game_over: break
             key = sturm.get_key()
             if key.upper() == 'Q': break
-            elif key in globals(): # Hacky hacky, sorry. :P
-                sliding = list(globals()[key](board))
+            elif key in arrows:
+                sliding = list(arrows[key](board))
                 if sliding:
                     for board in sliding:
                         sturm.render((heading, view(board), score))
@@ -95,6 +95,8 @@ def slide(lo, row):
             if row[i-1] == row[i]: lo = i
             return lo, row[:i-1] + (row[i-1]+row[i],) + row[i+1:] + (0,)
     return 4, row
+
+arrows = dict(up=up, down=down, right=right, left=left)
 
 
 # Let's test sliding:
