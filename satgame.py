@@ -83,16 +83,13 @@ class Game(object):
             yield ' ', name, '\n'
 
 
-def compose(*fns): return reduce(compose2, fns)
-def compose2(f, g): return lambda x: f(g(x))
-
 S = sturm
 
 bg          = S.on_black
-row_true    = compose(bg, S.red)
-row_false   = compose(bg, S.white)
-satisfied   = compose(bg, S.blue)
-unsatisfied = compose(bg, S.bold, S.yellow)
+row_true    = S.compose(bg, S.red)
+row_false   = S.compose(bg, S.white)
+satisfied   = S.compose(bg, S.blue)
+unsatisfied = S.compose(bg, S.bold, S.yellow)
 
 
 if __name__ == '__main__':

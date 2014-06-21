@@ -185,6 +185,11 @@ inverted   = Style('inverted',   7)
 default_state = State(39, 49, 0, False)
 screen_state  = default_state.copy()
 
+# Often handy to combine styles:
+def unstyled(x):    return x
+def compose(*fns):  return reduce(compose2, fns)
+def compose2(f, g): return lambda x: f(g(x))
+
 
 # Keyboard input
 
