@@ -24,6 +24,7 @@ def main():
 instructions = """\
 To win, put a * in every column. (Columns with no *'s are yellow.)
 Flip O's and *'s in a row by typing its key (listed on the left and right edges).
+Press the spacebar to mark/unmark the last row you flipped (as a memory aid).
 Press Tab to cycle to the next game, Esc to quit."""
 
 def play(games):
@@ -38,6 +39,8 @@ def play(games):
             break
         elif key == '\t':
             level = (level + 1) % len(games)
+        elif key == ' ':
+            game.toggle_mark()
         else:
             v = game.variable_of_name(key)
             if v is not None:
@@ -52,6 +55,8 @@ class Game(object):
         self.env       = {v: False for v in variables}
         self.names     = dict(zip(names, variables))
         self.variables = dict(zip(variables, names))
+        self.last_flip = None   # The variable last flipped
+        self.marks     = set()  # Variables currently marked
 
     def variable_of_name(self, name):
         return self.names.get(name.upper())
@@ -65,6 +70,14 @@ class Game(object):
 
     def flip(self, v):
         self.env[v] = not self.env[v]
+        self.last_flip = v
+
+    def toggle_mark(self):
+        if self.last_flip is not None:
+            if self.last_flip in self.marks:
+                self.marks.remove(self.last_flip)
+            else:
+                self.marks.add(self.last_flip)
 
     def view(self):
 
@@ -76,6 +89,7 @@ class Game(object):
 
         for v in self.variables:
             v_color = row_true if self.env[v] else row_false
+            if v in self.marks: v_color = S.compose(S.underlined, v_color)
             name = v_color(self.variables[v])
             yield name, ' '
             for clause in self.problem:
