@@ -1,5 +1,5 @@
 """
-Type something in while a stopwatch counts, and show your typing speed.
+Type something in while a stopwatch counts up, showing your typing speed.
 """
 
 import time
@@ -11,19 +11,27 @@ def main(argv):
         interact()
     return 0
 
+def show(t, body):
+    cps = (len(body)-1) / t if t and body else 0
+    sturm.render(('%5.1f secs  %5.1f wpm' % (t, 60/5 * cps),
+                  '\t(Hit Esc to quit.)\n\n',
+                  body, sturm.cursor))
+    
 def interact():
+    show(0, "(Start typing...)")
+    strokes = sturm.get_key()
     start = time.time()
-    strokes = ''
     while True:
-        banner = '%5.1f' % (time.time() - start)
-        sturm.render((banner + '\n\n' + strokes,
-                      sturm.cursor))
+        show(time.time() - start, strokes)
         key = sturm.get_key(timeout=0.1)
         if key is None:
             continue
-        elif key == 'q':
+        elif key == sturm.esc:
             break
-        strokes += key
+        elif key == 'backspace':
+            strokes = strokes[:-1]
+        elif len(key) == 1:   # an ordinary key, not special like PgUp
+            strokes += key
 
 if __name__ == '__main__':
     import sys
