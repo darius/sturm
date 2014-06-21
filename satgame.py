@@ -27,9 +27,9 @@ Flip O's and *'s in a row by typing its key (listed on the left and right edges)
 Press Tab to cycle to the next game, Esc to quit."""
 
 def play(games):
-    game_num = 0
+    level = 0
     while True:
-        game = games[game_num]
+        game = games[level]
         sturm.render((instructions, "\n\n",
                       game.view(), "\n",
                       "You win!" if game.is_solved() else ""))
@@ -37,7 +37,7 @@ def play(games):
         if key == sturm.esc:
             break
         elif key == '\t':
-            game_num = (game_num + 1) % len(games)
+            level = (level + 1) % len(games)
         else:
             v = game.variable_of_name(key)
             if v is not None:
