@@ -13,8 +13,8 @@ def main(argv):
 
 def show(t, body):
     cps = (len(body)-1) / t if t and body else 0
-    sturm.render('%5.1f secs  %5.1f wpm' % (t, 60/5 * cps),
-                 '\t(Hit Esc to quit.)\n\n',
+    sturm.render('%3d secs  %3d wpm' % (t, round(60/5 * cps)),
+                 '   (Hit Esc to quit.)\n\n',
                  body, sturm.cursor)
     
 def interact():
@@ -23,7 +23,7 @@ def interact():
     start = time.time()
     while True:
         show(time.time() - start, strokes)
-        key = sturm.get_key(timeout=0.1)
+        key = sturm.get_key(timeout=0.2)
         if key is None:
             continue
         elif key == sturm.esc:
