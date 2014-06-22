@@ -37,8 +37,9 @@ def update(computation, i, string):
                                   if pattern.startswith(ch))))
 
 def view(computation, i):
-    return ((' '*i, pattern or sturm.green('match!'), '\n')
-            for pattern in computation[i])
+    for pattern in computation[i]:
+        yield ' '*i, pattern or sturm.green('match!'), '\n'
+            
 
 if __name__ == '__main__':
     import sys
