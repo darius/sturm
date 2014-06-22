@@ -91,7 +91,7 @@ def human_play(grid):
             if 1 <= move <= 9:
                 successor = apply_move(grid, from_human_move(move))
                 if successor: return successor
-        plaint = ("Hey, that's illegal. Give me one of the above digits.\n\n")
+        plaint = "Hey, that's not a move. Give me one of the above digits.\n\n"
 
 def view_valid_moves(grid):
     moves = iter(range(1, 10))
