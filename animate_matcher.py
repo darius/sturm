@@ -18,12 +18,16 @@ def main(argv):
         animate(string, patterns)
     return 0
 
+instructions = "\
+Press the spacebar or left/right arrow to step through the matching."
+
 def animate(string, patterns):
     i = 0
     computation = [sorted(set(patterns))]
     while True:
         update(computation, i, string)
-        sturm.render((string[:i], sturm.cursor, string[i:], '\n\n',
+        sturm.render((instructions, "\n\n",
+                      string[:i], sturm.cursor, string[i:], "\n\n",
                       view(computation, i)))
         key = sturm.get_key()
         if   key == sturm.esc:     break
