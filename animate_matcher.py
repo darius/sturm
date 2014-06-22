@@ -4,11 +4,21 @@ Animate matching a set of literal patterns against a string.
 
 import sturm
 
-def main():
+def main(argv):
+    if len(argv) == 1:
+        string = 'cats are fat'
+        patterns = 'rat cat capsize catalog'.split()
+    elif len(argv) == 2:
+        print("Usage: python %s [string pattern1 pattern2...]" % argv[0])
+        return 1
+    else:
+        string = argv[1]
+        patterns = argv[2:]
     with sturm.cbreak_mode():
-        run(['rat', 'cat', 'capsize', 'catalog'], 'cats are fat')
+        run(string, patterns)
+    return 0
 
-def run(patterns, string):
+def run(string, patterns):
     i = 0
     computation = [sorted(set(patterns))]
     while True:
@@ -31,4 +41,5 @@ def view(computation, i):
             for pattern in computation[i])
 
 if __name__ == '__main__':
-    main()
+    import sys
+    sys.exit(main(sys.argv))
