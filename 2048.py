@@ -12,16 +12,27 @@ def main():
         play(make_board())
 
 def play(board):
+    forfeit = False
+    history = []
     while True:
         game_over = not any(list(move(board)) for move in arrows.values())
-        score = "You win!" if is_won(board) else "You lose!" if game_over else ""
+        score = ("You forfeit." if forfeit       else
+                 "You win!"     if is_won(board) else
+                 "You lose!"    if game_over     else "")
         frame(board, score)
-        if game_over: break
+        if game_over:
+            break
         key = sturm.get_key()
-        if key.upper() == 'Q': break
+        if key.upper() == 'Q':
+            break
+        elif key.upper() == 'U':
+            if history:
+                board = history.pop()
+                forfeit = True
         elif key in arrows:
             sliding = list(arrows[key](board))
             if sliding:
+                history.append(board)
                 animate(sliding, score)
                 board = plop(sliding[-1], 2 if random.random() < .9 else 4)
 
@@ -31,7 +42,7 @@ def animate(boards, score):
         time.sleep(1./25)
 
 def frame(board, score):
-    heading = "Use the arrow keys, or Q to quit.\n\n"
+    heading = "Use the arrow keys, U to undo (and forfeit), or Q to quit.\n\n"
     sturm.render((heading, view(board), score))
 
 # A board is a tuple of 4 rows;
