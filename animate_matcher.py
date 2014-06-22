@@ -15,10 +15,10 @@ def main(argv):
         string = argv[1]
         patterns = argv[2:]
     with sturm.cbreak_mode():
-        run(string, patterns)
+        animate(string, patterns)
     return 0
 
-def run(string, patterns):
+def animate(string, patterns):
     i = 0
     computation = [sorted(set(patterns))]
     while True:
