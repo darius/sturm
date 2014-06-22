@@ -16,8 +16,8 @@ def run():
     strokes = []
     while True:
         lines = textwrap.wrap(' '.join(strokes), sturm.COLS)
-        sturm.render(("Hit some keys; or hit capital Q to quit.\n\n",
-                      '\n'.join(lines), sturm.cursor))
+        sturm.render("Hit some keys; or hit capital Q to quit.\n\n",
+                     '\n'.join(lines), sturm.cursor)
         key = sturm.get_key()
         if key == 'Q':
             break

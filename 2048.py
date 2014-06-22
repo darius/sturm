@@ -43,7 +43,7 @@ def animate(boards, score):
 
 def frame(board, score):
     heading = "Use the arrow keys, U to undo (and forfeit), or Q to quit.\n\n"
-    sturm.render((heading, view(board), score))
+    sturm.render(heading, view(board), score)
 
 # A board is a tuple of 4 rows;
 # a row is a tuple of 4 values;

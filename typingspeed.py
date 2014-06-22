@@ -13,9 +13,9 @@ def main(argv):
 
 def show(t, body):
     cps = (len(body)-1) / t if t and body else 0
-    sturm.render(('%5.1f secs  %5.1f wpm' % (t, 60/5 * cps),
-                  '\t(Hit Esc to quit.)\n\n',
-                  body, sturm.cursor))
+    sturm.render('%5.1f secs  %5.1f wpm' % (t, 60/5 * cps),
+                 '\t(Hit Esc to quit.)\n\n',
+                 body, sturm.cursor)
     
 def interact():
     show(0, "(Start typing...)")

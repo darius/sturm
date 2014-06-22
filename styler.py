@@ -28,11 +28,11 @@ def edit():
     pos = 0
     things = [thing for thing in mockup if isinstance(thing, Cell)]
     while True:
-        sturm.render(('\n', view(mockup, pos), '\n\n',
-                      '   '.join(k+' '+v
-                                 for k,v in sorted(style_map.items())), '\n\n',
-                      ' '.join(colors), '\n\n',
-                      "Right/left or tab/shift-tab to navigate; Esc to quit."))
+        sturm.render('\n', view(mockup, pos), '\n\n',
+                     '   '.join(k+' '+v
+                                for k,v in sorted(style_map.items())), '\n\n',
+                     ' '.join(colors), '\n\n',
+                     "Right/left or tab/shift-tab to navigate; Esc to quit.")
         key = sturm.get_key()
         if   key == sturm.esc:   break
         elif key in lefts:       pos = (pos - 1) % len(things)

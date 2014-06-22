@@ -55,7 +55,7 @@ def write(s):
 
 cursor = object()
 
-def render(scene):
+def render(*scene):
     out = sys.stdout.write
     out(home_and_hide)
     cursor_seen = top_paint(scene)

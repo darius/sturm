@@ -31,9 +31,9 @@ def play(games):
     level = 0
     while True:
         game = games[level]
-        sturm.render((instructions, "\n\n",
-                      game.view(), "\n",
-                      "You win!" if game.is_solved() else ""))
+        sturm.render(instructions, "\n\n",
+                     game.view(), "\n",
+                     "You win!" if game.is_solved() else "")
         key = sturm.get_key()
         if key == sturm.esc:
             break
