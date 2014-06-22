@@ -9,22 +9,24 @@ import sturm
 
 def main():
     with sturm.cbreak_mode():
-        board = make_board()
-        while True:
-            game_over = not any(list(move(board)) for move in arrows.values())
-            heading = "Use the arrow keys, or Q to quit.\n\n"
-            score = "You win!" if is_won(board) else "You lose!" if game_over else ""
-            sturm.render((heading, view(board), score))
-            if game_over: break
-            key = sturm.get_key()
-            if key.upper() == 'Q': break
-            elif key in arrows:
-                sliding = list(arrows[key](board))
-                if sliding:
-                    for board in sliding:
-                        sturm.render((heading, view(board), score))
-                        time.sleep(1./25)
-                    board = plop(board, 2 if random.random() < .9 else 4)
+        play(make_board())
+
+def play(board):
+    while True:
+        game_over = not any(list(move(board)) for move in arrows.values())
+        heading = "Use the arrow keys, or Q to quit.\n\n"
+        score = "You win!" if is_won(board) else "You lose!" if game_over else ""
+        sturm.render((heading, view(board), score))
+        if game_over: break
+        key = sturm.get_key()
+        if key.upper() == 'Q': break
+        elif key in arrows:
+            sliding = list(arrows[key](board))
+            if sliding:
+                for board in sliding:
+                    sturm.render((heading, view(board), score))
+                    time.sleep(1./25)
+                board = plop(board, 2 if random.random() < .9 else 4)
 
 # A board is a tuple of 4 rows;
 # a row is a tuple of 4 values;
