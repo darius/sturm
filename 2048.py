@@ -14,19 +14,25 @@ def main():
 def play(board):
     while True:
         game_over = not any(list(move(board)) for move in arrows.values())
-        heading = "Use the arrow keys, or Q to quit.\n\n"
         score = "You win!" if is_won(board) else "You lose!" if game_over else ""
-        sturm.render((heading, view(board), score))
+        frame(board, score)
         if game_over: break
         key = sturm.get_key()
         if key.upper() == 'Q': break
         elif key in arrows:
             sliding = list(arrows[key](board))
             if sliding:
-                for board in sliding:
-                    sturm.render((heading, view(board), score))
-                    time.sleep(1./25)
-                board = plop(board, 2 if random.random() < .9 else 4)
+                animate(sliding, score)
+                board = plop(sliding[-1], 2 if random.random() < .9 else 4)
+
+def animate(boards, score):
+    for board in boards:
+        frame(board, score)
+        time.sleep(1./25)
+
+def frame(board, score):
+    heading = "Use the arrow keys, or Q to quit.\n\n"
+    sturm.render((heading, view(board), score))
 
 # A board is a tuple of 4 rows;
 # a row is a tuple of 4 values;
