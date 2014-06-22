@@ -13,7 +13,7 @@ def main(argv):
 
 def show(t, body):
     cps = (len(body)-1) / t if t and body else 0
-    sturm.render('%3d secs  %3d wpm' % (t, round(60/5 * cps)),
+    sturm.render('%3d seconds  %3d words/minute' % (t, round(60/5 * cps)),
                  '   (Hit Esc to quit.)\n\n',
                  body, sturm.cursor)
     
