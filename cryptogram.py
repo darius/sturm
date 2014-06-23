@@ -66,7 +66,7 @@ def puzzle(cryptogram):
 
     def view():
         counts = collections.Counter(v for v in decoder.values() if v != ' ')
-        yield sturm.green(('Available: ',
+        yield sturm.green(("Free: ",
                            (' ' if c in counts else c for c in alphabet),
                            '\n'))
 
