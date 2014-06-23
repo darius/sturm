@@ -83,7 +83,7 @@ def puzzle(cryptogram):
             for c in line:
                 color = (sturm.red if decoder.get(c) in clashes
                          else sturm.green if c == at_c
-                         else lambda x: x)
+                         else sturm.unstyled)
                 yield color(c)
             yield '\n'
 
