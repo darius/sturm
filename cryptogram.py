@@ -7,29 +7,27 @@ import collections, commands, itertools, random, string, sys
 import sturm
 
 def main(argv):
-    if   len(argv) == 1:
-        make_cryptogram = lambda: random_encrypt(fortune())
-    elif len(argv) == 2:
-        make_cryptogram = lambda: argv[1]
+    if   len(argv) == 1: make_cryptogram = lambda: random_encrypt(fortune())
+    elif len(argv) == 2: make_cryptogram = lambda: argv[1]
     else:
         print("Usage: python %s [cryptogram]" % sys.argv[0])
         sys.exit(1)
     with sturm.cbreak_mode():
         puzzle(make_cryptogram())
 
+alphabet = string.ascii_lowercase
+
 def random_encrypt(text):
-    text = text.lower()
-    keys = string.ascii_lowercase
-    values = list(keys); random.shuffle(values)
-    code = dict(zip(keys, values))
-    return ''.join(code.get(c, c) for c in text)
+    values = list(alphabet); random.shuffle(values)
+    code = dict(zip(alphabet, values))
+    return ''.join(code.get(c, c) for c in text.lower())
 
 def fortune():
     while True:
         text = shell_run('fortune')
         lines = text.splitlines()
         # Will it fit? TODO: cleaner to actually try to render it.
-        if 4 * len(lines) < sturm.ROWS-1 and max(map(len, lines)) < sturm.COLS:
+        if 2 + 4*len(lines) < sturm.ROWS-1 and max(map(len, lines)) < sturm.COLS:
             return text
 
 def shell_run(command):
@@ -59,12 +57,13 @@ def puzzle(cryptogram):
                 if ' ' == decoder[code[my.cursor]]:
                     break
 
-    def find_clashes():
-        counts = collections.Counter(v for v in decoder.values() if v != ' ')
-        return set(v for v,n in counts.items() if 1 < n)
-
     def view():
-        clashes = find_clashes()
+        counts = collections.Counter(v for v in decoder.values() if v != ' ')
+        yield sturm.green(('Available: ',
+                           (' ' if c in counts else c for c in alphabet),
+                           '\n'))
+
+        clashes = set(v for v,n in counts.items() if 1 < n)
         pos = itertools.count(0)
         at_c = code[my.cursor]
         for line in lines:
