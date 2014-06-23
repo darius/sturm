@@ -46,7 +46,6 @@ def puzzle(cryptogram):
     lines = [line.replace('\t', ' ') # XXX formatting hack
              for line in cryptogram.splitlines()]
 
-    def erase():          jot(' ')
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
 
@@ -56,6 +55,14 @@ def puzzle(cryptogram):
                 shift_by(1)
                 if ' ' == decoder[code[my.cursor]]:
                     break
+
+    def shift_line(offset):
+        my.cursor = line_starts[(line_number(my.cursor) + offset) % len(lines)]
+    def line_number(pos):
+        return next(i for i, start in enumerate(line_starts) # TODO: use binary search
+                    if start <= pos < line_starts[i+1])
+    line_starts = running_sum(sum(c.isalpha() for c in line)
+                              for line in lines)
 
     def view():
         counts = collections.Counter(v for v in decoder.values() if v != ' ')
@@ -83,22 +90,29 @@ def puzzle(cryptogram):
     while True:
         sturm.render(view())
         key = sturm.get_key()
-        if   key == sturm.esc:
-            break
-        elif key == 'right': shift_by(1)
-        elif key == 'left':  shift_by(-1)
-        elif key == '\t':    shift_to_space()
-        elif key == 'home':  my.cursor = 0
-        elif key == 'end':   my.cursor = len(code)-1
+        if   key == sturm.esc: break
+        elif key == 'home':    my.cursor = 0
+        elif key == 'end':     my.cursor = len(code)-1
+        elif key == 'left':    shift_by(-1)
+        elif key == 'right':   shift_by( 1)
+        elif key == 'up':      shift_line(-1)
+        elif key == 'down':    shift_line( 1)
+        elif key == '\t':      shift_to_space()
         elif key == 'backspace':
             shift_by(-1)
-            erase()
+            jot(' ')
         elif key == 'del':
-            erase()
+            jot(' ')
             shift_by(1)
         elif key in string.ascii_letters + ' ':
             jot(key)
             shift_by(1)
+
+def running_sum(ns):
+    result = [0]
+    for n in ns:
+        result.append(result[-1] + n)
+    return result
 
 if __name__ == '__main__':
     main(sys.argv)
