@@ -92,7 +92,7 @@ def cross_product(lists):
                 yield [x] + xs
 
 def best_permutation(words):
-    return max(map(bigram_score, permutations(words)))
+    return max(map(bigram_score, set(permutations(words))))
 
 cache = {}
 
