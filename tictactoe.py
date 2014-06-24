@@ -40,19 +40,22 @@ def tictactoe(player, opponent, grid=None):
     while True:
         if is_won(grid):
             _, winner = player_marks(grid)
-            sturm.render(view(grid), "\n\n%s wins." % winner)
+            sturm.render(show(grid), "%s wins." % winner)
             break
         if not successors(grid):
-            sturm.render(view(grid), "\n\nA draw.")
+            sturm.render(show(grid), "A draw.")
             break
         if human_play not in (player, opponent):
-            sturm.render(view(grid), ("\n\n%s to move %s. (Press a key.)"
+            sturm.render(show(grid), ("%s to move %s. (Press a key.)"
                                       % (player.__name__.replace('_play', ''),
                                          whose_move(grid))))
             if sturm.get_key() == sturm.esc:
                 break
         grid = player(grid)
         player, opponent = opponent, player
+
+def show(grid):
+    return '\n\n', view(grid), '\n\n'
 
 
 # Utilities
@@ -79,8 +82,9 @@ def human_play(grid):
     plaint = ''
     prompt = whose_move(grid) + " move? [1-9] "
     while True:
-        sturm.render(view_valid_moves(grid) if plaint else view(grid), "\n\n",
-                     plaint, prompt, sturm.cursor)
+        sturm.render(plaint, "\n\n",
+                     view_valid_moves(grid) if plaint else view(grid), "\n\n",
+                     prompt, sturm.cursor)
         key = sturm.get_key()
         if key == sturm.esc: sys.exit()
         try:
@@ -91,7 +95,7 @@ def human_play(grid):
             if 1 <= move <= 9:
                 successor = apply_move(grid, from_human_move(move))
                 if successor: return successor
-        plaint = "Hey, that's not a move. Give me one of the above digits.\n\n"
+        plaint = "Hey, that's not a move. Give me one of the digits below."
 
 def view_valid_moves(grid):
     moves = iter(range(1, 10))
