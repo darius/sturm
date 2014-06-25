@@ -26,8 +26,8 @@ def main(argv):
         else:
             raise KeyError
     except KeyError:
-        print "Usage: %s [player] [player]" % argv[0]
-        print "where a player is one of:", ', '.join(sorted(pool))
+        print("Usage: %s [player] [player]" % argv[0])
+        print("where a player is one of: %s" % ', '.join(sorted(pool)))
         return 1
     else:
         with sturm.cbreak_mode():
@@ -61,6 +61,7 @@ def show(grid):
 # Utilities
 
 def average(ns):
+    ns = list(ns)
     return float(sum(ns)) / len(ns)
 
 def memo(f):
@@ -136,7 +137,7 @@ def evaluate(grid):
     return -min(map(evaluate, succs)) if succs else 0
     
 
-# We represent a tic-tac-toe grid as a pair of bit-vectors (p, q), p
+# We represent a tic-tac-toe grid as a pair of bit-vectors (p,q), p
 # for the player to move, q for their opponent. So p has 9
 # bit-positions, one for each square in the grid, with a 1 in the
 # positions where the player has already moved; and likewise for the
@@ -149,12 +150,13 @@ def evaluate(grid):
 
 empty_grid = 0, 0
 
-def is_won((p, q)):
+def is_won(grid):
     "Did the latest move win the game?"
+    p, q = grid
     return any(way == (way & q) for way in ways_to_win)
 
-# Numbers starting with 0 are in octal: 3 bits/digit, thus one row per digit.
-ways_to_win = (0700, 0070, 0007, 0444, 0222, 0111, 0421, 0124)
+# Numbers like 0o... are in octal: 3 bits/digit, thus one grid-row per digit.
+ways_to_win = (0o700, 0o070, 0o007, 0o444, 0o222, 0o111, 0o421, 0o124)
 
 ## multiview((0, way) for way in ways_to_win)
 #.  X X X   . . .   . . .   X . .   . X .   . . X   X . .   . . X
@@ -163,15 +165,16 @@ ways_to_win = (0700, 0070, 0007, 0444, 0222, 0111, 0421, 0124)
 
 def successors(grid):
     "Return the possible grids resulting from p's moves."
-    return filter(None, (apply_move(grid, move) for move in range(9)))
+    return list(filter(None, (apply_move(grid, move) for move in range(9))))
 
 ## multiview(successors(empty_grid))
 #.  . . .   . . .   . . .   . . .   . . .   . . .   . . X   . X .   X . .
 #.  . . .   . . .   . . .   . . X   . X .   X . .   . . .   . . .   . . .
 #.  . . X   . X .   X . .   . . .   . . .   . . .   . . .   . . .   . . .
 
-def apply_move((p, q), move):
+def apply_move(grid, move):
     "Try to move: return a new grid, or None if illegal."
+    p, q = grid
     bit = 1 << move
     return (q, p | bit) if 0 == (bit & (p | q)) else None
 
@@ -189,8 +192,9 @@ def whose_move(grid):
     "Return the mark of the player to move."
     return player_marks(grid)[0]
 
-def player_marks((p, q)):
+def player_marks(grid):
     "Return two results: the player's mark and their opponent's."
+    p, q = grid
     return 'XO' if sum(player_bits(p)) == sum(player_bits(q)) else 'OX'
 
 def player_bits(bits):
