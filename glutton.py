@@ -19,16 +19,11 @@ def run():
     while True:
         sturm.render(view(grid))
         key = sturm.get_key(0.1)
-        if key == sturm.esc:
-            break
-        elif key == 'left':
-            glutton.toggle_motion('>', left)
-        elif key == 'right':
-            glutton.toggle_motion('<', right)
-        elif key == 'up':
-            glutton.toggle_motion('V', up)
-        elif key == 'down':
-            glutton.toggle_motion('^', down)
+        if key == sturm.esc: break
+        elif key == 'left':  glutton.toggle_motion('>', left)
+        elif key == 'right': glutton.toggle_motion('<', right)
+        elif key == 'up':    glutton.toggle_motion('V', up)
+        elif key == 'down':  glutton.toggle_motion('^', down)
         glutton.move(grid)
 
 left    = -1,  0
