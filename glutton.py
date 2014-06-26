@@ -20,10 +20,10 @@ def run():
         sturm.render(view(grid))
         key = sturm.get_key(0.1)
         if key == sturm.esc: break
-        elif key == 'left':  glutton.toggle_motion('>', left)
-        elif key == 'right': glutton.toggle_motion('<', right)
-        elif key == 'up':    glutton.toggle_motion('V', up)
-        elif key == 'down':  glutton.toggle_motion('^', down)
+        elif key == 'left':  glutton.face('>', left)
+        elif key == 'right': glutton.face('<', right)
+        elif key == 'up':    glutton.face('V', up)
+        elif key == 'down':  glutton.face('^', down)
         glutton.act(grid)
 
 left    = -1,  0
@@ -42,19 +42,25 @@ class Agent(object):
     def __init__(self, p):
         self.p = p
         self.v = stopped
+        self.heading = stopped
         self.glyph = '<'
-    def toggle_motion(self, glyph, v):
+    def face(self, glyph, heading):
         self.glyph = glyph
-        self.v = stopped if self.v == v else v
+        self.heading = heading
     def act(self, grid):
+        self.move(grid, self.heading) or self.move(grid, self.v)
+    def move(self, grid, (dx, dy)):
         x, y = self.p
-        dx, dy = self.v
         x2, y2 = x+dx, y+dy
         if grid[y2][x2] in ' .o': # XXX bounds
             grid[y2][x2] = self.glyph
             grid[y][x] = ' '
             self.p = x2, y2
-            
+            self.v = dx, dy
+            return True
+        else:
+            return False
+
 def view(grid):
     for row in grid:
         for i, c in enumerate(row):
