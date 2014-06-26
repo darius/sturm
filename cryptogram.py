@@ -1,6 +1,5 @@
 """
 A UI for cryptogram puzzles.
-Incomplete in many ways.
 """
 
 import collections, commands, itertools, random, string, sys
