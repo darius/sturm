@@ -38,7 +38,7 @@ def shell_run(command):
 
 def puzzle(cryptogram):
     def my(): pass        # A hack to get a mutable-nonlocal variable.
-    my.cursor = 0
+    my.cursor = 0         # TODO: simpler now to track line# and column#?
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
     decoder = {c: ' ' for c in set(code)}
