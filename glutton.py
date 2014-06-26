@@ -13,9 +13,8 @@ def main():
 
 def run():
     grid = [list(line) for line in maze]
-    x, y = find_glutton(maze)
-    glutton = Agent((x, y))
-    grid[y][x] = glutton.glyph
+    glutton = Agent(find_glutton(maze))
+    glutton.place_on(grid)
     while True:
         sturm.render(view(grid))
         key = sturm.get_key(0.1)
@@ -44,6 +43,9 @@ class Agent(object):
         self.v = stopped
         self.heading = stopped
         self.glyph = '<'
+    def place_on(self, grid):
+        x, y = self.p
+        grid[y][x] = self.glyph
     def face(self, glyph, heading):
         self.glyph = glyph
         self.heading = heading
