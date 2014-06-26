@@ -24,7 +24,7 @@ def run():
         elif key == 'right': glutton.toggle_motion('<', right)
         elif key == 'up':    glutton.toggle_motion('V', up)
         elif key == 'down':  glutton.toggle_motion('^', down)
-        glutton.move(grid)
+        glutton.act(grid)
 
 left    = -1,  0
 right   =  1,  0
@@ -46,7 +46,7 @@ class Agent(object):
     def toggle_motion(self, glyph, v):
         self.glyph = glyph
         self.v = stopped if self.v == v else v
-    def move(self, grid):
+    def act(self, grid):
         x, y = self.p
         dx, dy = self.v
         x2, y2 = x+dx, y+dy
