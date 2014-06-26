@@ -53,8 +53,8 @@ class Agent(object):
         self.move(grid, self.heading) or self.move(grid, self.v)
     def move(self, grid, (dx, dy)):
         x, y = self.p
-        x2, y2 = x+dx, y+dy
-        if grid[y2][x2] in ' .o': # XXX bounds
+        x2, y2 = (x+dx) % len(grid[0]), (y+dy) % len(grid)
+        if grid[y2][x2] in ' .o':
             grid[y2][x2] = self.glyph
             grid[y][x] = ' '
             self.p = x2, y2
