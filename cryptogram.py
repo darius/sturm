@@ -65,13 +65,12 @@ def puzzle(cryptogram):
 
     def view(show_cursor=True):
         counts = collections.Counter(v for v in decoder.values() if v != ' ')
-        yield sturm.green(("Free: ",
-                           (' ' if c in counts else c for c in alphabet),
-                           '\n'))
-
+        letters_left = ''.join(' ' if c in counts else c for c in alphabet)
         clashes = set(v for v,n in counts.items() if 1 < n)
         pos = itertools.count(0)
         at_c = code[my.cursor]
+
+        yield sturm.green(("Free: ", letters_left, '\n'))
         for line in lines:
             yield '\n'
             for c in line:
