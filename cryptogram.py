@@ -68,7 +68,6 @@ def puzzle(cryptogram):
         letters_left = ''.join(' ' if c in counts else c for c in alphabet)
         clashes = set(v for v,n in counts.items() if 1 < n)
         pos = itertools.count(0)
-        at_c = code[my.cursor]
 
         yield sturm.green(("Free: ", letters_left, '\n'))
         for line in lines:
@@ -81,7 +80,7 @@ def puzzle(cryptogram):
             yield ''.join(' -'[c.isalpha()] for c in line) + '\n'
             for c in line:
                 color = (sturm.red if decoder.get(c) in clashes
-                         else sturm.green if c == at_c
+                         else sturm.green if c == code[my.cursor]
                          else sturm.unstyled)
                 yield color(c)
             yield '\n'
