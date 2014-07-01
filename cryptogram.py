@@ -63,7 +63,7 @@ def puzzle(cryptogram):
     line_starts = running_sum(sum(c.isalpha() for c in line)
                               for line in lines)
 
-    def view():
+    def view(show_cursor=True):
         counts = collections.Counter(v for v in decoder.values() if v != ' ')
         yield sturm.green(("Free: ",
                            (' ' if c in counts else c for c in alphabet),
@@ -75,7 +75,8 @@ def puzzle(cryptogram):
         for line in lines:
             yield '\n'
             for c in line:
-                if c.isalpha() and next(pos) == my.cursor: yield sturm.cursor
+                if show_cursor and c.isalpha() and next(pos) == my.cursor:
+                    yield sturm.cursor
                 yield decoder.get(c, c)
             yield '\n'
             yield ''.join(' -'[c.isalpha()] for c in line) + '\n'
@@ -106,6 +107,8 @@ def puzzle(cryptogram):
         elif key in string.ascii_letters + ' ':
             jot(key)
             shift_by(1)
+    # So the shell prompt after exit doesn't overwrite the middle:
+    sturm.render(view(show_cursor=False))
 
 def running_sum(ns):
     result = [0]
