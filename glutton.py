@@ -2,7 +2,7 @@
 Pac-Man clone.
 """
 
-import random
+import random, time
 import sturm
 
 with open('glutton.maze') as f:
@@ -15,15 +15,18 @@ def main():
 dbg_log = []
 dbg = dbg_log.append
 
+tick_interval = 1./10
+
 def run():
     grid = [list(line) for line in maze]
     glutton = Agent('<', find_glutton(maze))
     glutton.place_on(grid)
     ghosts = [make_ghost(grid) for _ in range(4)]
-    while True:
-        sturm.render(view(grid), [(' ', x) for x in dbg_log])
+    for _ in ticking():
+        sturm.render(view(grid, ghosts),
+                     [(' ', x) for x in dbg_log])
         dbg_log[:] = []
-        key = sturm.get_key(0.1)
+        key = sturm.get_key(tick_interval)
         if key == sturm.esc: break
         elif key == 'left':  glutton.face('>', left)
         elif key == 'right': glutton.face('<', right)
@@ -32,6 +35,14 @@ def run():
         glutton.act(grid)
         for ghost in ghosts:
             ghost.act(grid)
+
+def ticking():
+    tick = time.time()
+    while True:
+        yield
+        now = time.time()
+        tick = max(now, tick + tick_interval)
+        time.sleep(tick - now)
 
 left    = -1,  0
 right   =  1,  0
@@ -106,7 +117,7 @@ class Ghost(Agent):
         grid[y2][x2], grid[y][x], self.upon = self.glyph, self.upon, grid[y2][x2]
         self.p = x2, y2
 
-def view(grid):
+def view(grid, ghosts):
     for row in grid:
         for i, c in enumerate(row):
             yield color(c)
