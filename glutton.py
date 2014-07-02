@@ -25,6 +25,8 @@ def run():
     for _ in ticking():
         sturm.render(view(grid, ghosts),
                      [(' ', x) for x in dbg_log])
+        if glutton.p in [ghost.p for ghost in ghosts]:
+            break
         dbg_log[:] = []
         key = sturm.get_key(tick_interval)
         if key == sturm.esc: break
@@ -85,7 +87,7 @@ class Agent(object):
     def move(self, grid, (dx, dy)):
         x, y = self.p
         x2, y2 = (x+dx) % len(grid[0]), (y+dy) % len(grid)
-        if grid[y2][x2] in ' .o':
+        if grid[y2][x2] in ' .o<>V^':
             self.step(grid, x2, y2)
             self.v = dx, dy
             return True
@@ -94,8 +96,8 @@ class Agent(object):
 
     def step(self, grid, x2, y2):
         x, y = self.p
-        grid[y2][x2] = self.glyph
         grid[y][x] = ' '
+        grid[y2][x2] = self.glyph
         self.p = x2, y2
 
 class Ghost(Agent):
