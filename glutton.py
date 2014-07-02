@@ -1,5 +1,5 @@
 """
-Pac-Man clone.
+A Pac-Man clone.
 """
 
 import random, time
@@ -53,19 +53,16 @@ stopped =  0,  0
 headings = (left, right, up, down)
 
 def find_glutton(maze):
-    for y, line in enumerate(maze):
-        if 'P' in line:
-            return line.index('P'), y
-    assert False
+    return next(find(maze, 'P'))
 
 def make_ghost(grid):
-    while True:
-        x, y = (random.randint(0, len(grid[0])-1),
-                random.randint(0, len(grid)-1))
-        if grid[y][x] in '.':
-            ghost = Ghost((x, y))
-            ghost.place_on(grid)
-            return ghost
+    return Ghost(random.choice(list(find(grid, '.'))))
+
+def find(grid, glyph):
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            if c == glyph:
+                yield x, y
 
 class Agent(object):
     def __init__(self, glyph, p):
@@ -104,7 +101,6 @@ class Agent(object):
 class Ghost(Agent):
     def __init__(self, p):
         Agent.__init__(self, 'G', p)
-        self.upon = '.'
         self.heading = random.choice(headings)
 
     def act(self, grid):
@@ -113,12 +109,14 @@ class Ghost(Agent):
         Agent.act(self, grid)
 
     def step(self, grid, x2, y2):
-        x, y = self.p
-        grid[y2][x2], grid[y][x], self.upon = self.glyph, self.upon, grid[y2][x2]
         self.p = x2, y2
 
 def view(grid, ghosts):
-    for row in grid:
+    rows = [list(row) for row in grid]
+    for ghost in ghosts:
+        x, y = ghost.p
+        rows[y][x] = 'G'
+    for row in rows:
         for i, c in enumerate(row):
             yield color(c)
             sep = ' -'[i+1<len(row) and is_wall(c) and is_wall(row[i+1])]
