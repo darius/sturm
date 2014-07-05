@@ -16,7 +16,7 @@ dbg_log = []
 dbg = dbg_log.append
 
 tick_interval = 1./10
-power_pill_interval = 15.0
+power_pill_interval = 12.0
 
 def run():
     grid = [list(line) for line in maze]
@@ -24,15 +24,18 @@ def run():
     glutton.place_on(grid)
     ghosts = [make_ghost(grid) for _ in range(4)]
     ghost_eater_until = 0
+
+    def collision_check():
+        if glutton.p in [ghost.p for ghost in ghosts]:
+            if eating_ghosts:
+                ghosts[:] = [ghost for ghost in ghosts if ghost.p != glutton.p]
+            else:
+                return 'caught'
+
     for _ in ticking():
         eating_ghosts = time.time() <= ghost_eater_until
         sturm.render(view(grid, ghosts, eating_ghosts),
                      [(' ', x) for x in dbg_log])
-        if glutton.p in [ghost.p for ghost in ghosts]:
-            if eating_ghosts:
-                ghosts = [ghost for ghost in ghosts if ghost.p != glutton.p]
-            else:
-                break
         dbg_log[:] = []
         key = sturm.get_key(tick_interval)
         if key == sturm.esc: break
@@ -43,8 +46,10 @@ def run():
         glutton.act(grid)
         if glutton.meal == 'o':
             ghost_eater_until = time.time() + power_pill_interval
+        if collision_check(): break
         for ghost in ghosts:
             ghost.act(grid)
+        if collision_check(): break
 
 def ticking():
     tick = time.time()
