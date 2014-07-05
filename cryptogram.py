@@ -42,8 +42,7 @@ def puzzle(cryptogram):
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
     decoder = {c: ' ' for c in set(code)}
-    lines = [line.replace('\t', ' ') # XXX formatting hack
-             for line in cryptogram.splitlines()]
+    lines = map(untabify, cryptogram.splitlines())
 
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
@@ -107,6 +106,17 @@ def puzzle(cryptogram):
             shift_by(1)
     # So the shell prompt after exit doesn't overwrite the middle:
     sturm.render(view(show_cursor=False))
+
+def untabify(s):
+    r = ''
+    for c in s:
+        if c != '\t':
+            r += c
+        else:
+            while True:
+                r += ' '
+                if len(r) % 8 == 0: break
+    return r
 
 def running_sum(ns):
     result = [0]
