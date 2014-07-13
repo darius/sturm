@@ -15,13 +15,10 @@ def play(board):
     forfeit = False
     history = []
     while True:
-        game_over = not any(list(move(board)) for move in arrows.values())
-        score = ("You forfeit." if forfeit       else
-                 "You win!"     if is_won(board) else
-                 "You lose!"    if game_over     else "")
+        score = ("You lose!"    if is_lost(board) else
+                 "You forfeit." if forfeit        else
+                 "You win!"     if is_won(board)  else "")
         frame(board, score)
-        if game_over:
-            break
         key = sturm.get_key()
         if key.upper() == 'Q':
             break
@@ -76,6 +73,9 @@ tiles = {   0:                                         '  . ',
 def is_won(board):
     return any(any(2048 <= v for v in row)
                for row in board)
+
+def is_lost(board):
+    return not any(list(move(board)) for move in arrows.values())
 
 # Pre: board is not full.
 def plop(board, v):
