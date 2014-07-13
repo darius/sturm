@@ -11,6 +11,8 @@ def main():
     with sturm.cbreak_mode():
         play(make_board())
 
+heading = "Use the arrow keys, U to undo (and forfeit), or Q to quit.\n\n"
+
 def play(board):
     forfeit = False
     history = []
@@ -33,14 +35,13 @@ def play(board):
                 animate(sliding, score)
                 board = plop(sliding[-1], 2 if random.random() < .9 else 4)
 
+def frame(board, score):
+    sturm.render(heading, view(board), score)
+
 def animate(boards, score):
     for board in boards:
         frame(board, score)
         time.sleep(1./25)
-
-def frame(board, score):
-    heading = "Use the arrow keys, U to undo (and forfeit), or Q to quit.\n\n"
-    sturm.render(heading, view(board), score)
 
 # A board is a tuple of 4 rows;
 # a row is a tuple of 4 values;
