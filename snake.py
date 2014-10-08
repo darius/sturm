@@ -29,7 +29,7 @@ def run():
                 for x in range(1, ncols-1)
                 if (x, y) not in body]
     target_x, target_y = random.choice(empties())
-    won = False
+    outcome = ''
 
     for _ in ticking():
         lengthen = False
@@ -41,22 +41,24 @@ def run():
                 lengthen = True
                 targets = empties()
                 if not targets:
-                    won = True
+                    outcome = "Win"
                 else:
                     target_x, target_y = random.choice(targets)
                     tick_interval *= .9
             if grid[y][x] not in ' @':
-                raise Exception('Lose')
-            grid[y][x] = '*'
+                outcome = "Lose"
+            else:
+                grid[y][x] = '*'
         def view():
             for row in grid:
                 for i, c in enumerate(row):
                     yield c
                 yield '\n'
+            yield outcome
 
         sturm.render(view(), [(' ', x) for x in dbg_log])
         dbg_log[:] = []
-        if won: break
+        if outcome: break
 
         key = sturm.get_key(tick_interval)
         if   key == 'Q':     break
