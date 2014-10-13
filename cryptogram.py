@@ -42,7 +42,7 @@ def puzzle(cryptogram):
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
     decoder = {c: ' ' for c in set(code)}
-    lines = map(untabify, cryptogram.splitlines())
+    lines = map(clean, cryptogram.splitlines())
 
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
@@ -107,15 +107,18 @@ def puzzle(cryptogram):
     # So the shell prompt after exit doesn't overwrite the middle:
     sturm.render(view(show_cursor=False))
 
-def untabify(s):
+def clean(s):
+    "Expand tabs; blank out other control characters."
     r = ''
     for c in s:
-        if c != '\t':
-            r += c
-        else:
+        if c == '\t':
             while True:
                 r += ' '
                 if len(r) % 8 == 0: break
+        elif ord(c) < 32:
+            r += ' '
+        else:
+            r += c
     return r
 
 def running_sum(ns):
