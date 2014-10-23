@@ -45,7 +45,8 @@ def run():
                     outcome = "Win"
                 else:
                     target_x, target_y = random.choice(targets)
-                    tick_interval *= .9
+                    tick_interval = max(.99 * tick_interval,
+                                        tick_interval-.01)
             if grid[y][x] in ' @':
                 grid[y][x] = '*'
             else:
