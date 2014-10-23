@@ -19,6 +19,7 @@ def run():
     tick_interval = 1./4
 
     body = [(10,10), (11,10), (12,10)]
+
     heading = down
     def face(new_heading):
         return heading if new_heading == negate(heading) else new_heading
@@ -29,9 +30,9 @@ def run():
                 for x in range(1, ncols-1)
                 if (x, y) not in body]
     target_x, target_y = random.choice(empties())
-    outcome = ''
 
     for _ in ticking():
+        outcome = ''
         lengthen = False
         grid = map(list,
                    ['#'*ncols] + (['#%*s#' % (ncols-2, '')] * (nrows-2)) + ['#'*ncols])
@@ -45,18 +46,13 @@ def run():
                 else:
                     target_x, target_y = random.choice(targets)
                     tick_interval *= .9
-            if grid[y][x] not in ' @':
-                outcome = "Lose"
-            else:
+            if grid[y][x] in ' @':
                 grid[y][x] = '*'
-        def view():
-            for row in grid:
-                for i, c in enumerate(row):
-                    yield c
-                yield '\n'
-            yield outcome
+            else:
+                outcome = "Lose"
 
-        sturm.render(view(), [(' ', x) for x in dbg_log])
+        sturm.render(view(grid, outcome),
+                     [(' ', x) for x in dbg_log])
         dbg_log[:] = []
         if outcome: break
 
@@ -72,6 +68,12 @@ def run():
 
 def negate((x, y)):        return (-x, -y)
 def add((x, y), (dx, dy)): return (x+dx, y+dy)
+
+def view(grid, outcome):
+    for row in grid:
+        for c in row: yield c
+        yield '\n'
+    yield outcome
 
 def ticking():
     tick = time.time()
