@@ -35,7 +35,7 @@ def run():
         outcome = ''
         lengthen = False
         grid = map(list,
-                   ['#'*ncols] + (['#%*s#' % (ncols-2, '')] * (nrows-2)) + ['#'*ncols])
+                   ['#'*ncols] + (['#'+(' '*(ncols-2))+'#'] * (nrows-2)) + ['#'*ncols])
         grid[target_y][target_x] = '@'
         for x, y in body:
             if grid[y][x] == '@':
@@ -71,7 +71,7 @@ def add((x, y), (dx, dy)): return (x+dx, y+dy)
 
 def view(grid, outcome):
     for row in grid:
-        for c in row: yield c
+        for c in row: yield ' '+c
         yield '\n'
     yield outcome
 
