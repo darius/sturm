@@ -4,6 +4,7 @@ A UI for cryptogram puzzles.
 
 import collections, commands, itertools, random, string, sys
 import sturm
+from sturm import ctrl
 
 def main(argv):
     if   len(argv) == 1: make_cryptogram = lambda: random_encrypt(fortune())
@@ -87,7 +88,7 @@ def puzzle(cryptogram):
     while True:
         sturm.render(view())
         key = sturm.get_key()
-        if   key == sturm.esc: break
+        if   key == ctrl('X'): break
         elif key == 'home':    my.cursor = 0
         elif key == 'end':     my.cursor = len(code)-1
         elif key == 'left':    shift_by(-1)

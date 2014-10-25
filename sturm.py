@@ -193,6 +193,9 @@ def compose2(f, g): return lambda x: f(g(x))
 
 # Keyboard input
 
+def ctrl(ch):
+    return chr(ord(ch.upper()) - 64)
+
 # Arrow keys, etc., are encoded as escape sequences:
 key_map = {chr(127): 'backspace',
            esc+'[1~': 'home',  esc+'[A': 'up',    esc+'OA': 'up',
