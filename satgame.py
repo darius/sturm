@@ -69,7 +69,7 @@ class Game(object):
                    for literal in clause)
 
     def flip(self, v):
-        self.env[v] = not self.env[v]
+        self.env[v] ^= True
         self.last_flip = v
 
     def toggle_mark(self):
