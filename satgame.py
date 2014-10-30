@@ -56,7 +56,7 @@ class Game(object):
         self.names     = dict(zip(names, variables))
         self.variables = dict(zip(variables, names))
         self.last_flip = None   # The variable last flipped
-        self.marks     = set()  # Variables currently marked
+        self.marked    = {v: False for v in variables}
 
     def variable_of_name(self, name):
         return self.names.get(name.upper())
@@ -74,10 +74,7 @@ class Game(object):
 
     def toggle_mark(self):
         if self.last_flip is not None:
-            if self.last_flip in self.marks:
-                self.marks.remove(self.last_flip)
-            else:
-                self.marks.add(self.last_flip)
+            self.marked[self.last_flip] ^= True
 
     def view(self):
 
@@ -89,7 +86,7 @@ class Game(object):
 
         for v in self.variables:
             v_color = row_true if self.env[v] else row_false
-            if v in self.marks: v_color = S.compose(S.underlined, v_color)
+            if self.marked[v]: v_color = S.compose(S.underlined, v_color)
             name = v_color(self.variables[v])
             yield name, ' '
             for clause in self.problem:
