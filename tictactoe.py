@@ -107,8 +107,6 @@ def view_valid_moves(grid):
             move = next(moves)
             yield sturm.green(str(move)) if c == '.' else c
 
-grid_format = '\n'.join([' %s %s %s'] * 3)
-
 def drunk_play(grid):
     "Beatable, but not so stupid it seems mindless."
     return min(successors(grid), key=drunk_value)
@@ -205,6 +203,8 @@ def view(grid):
     p_mark, q_mark = player_marks(grid)
     return grid_format % tuple(p_mark if by_p else q_mark if by_q else '.'
                                for by_p, by_q in zip(*map(player_bits, grid)))
+
+grid_format = '\n'.join([' %s %s %s'] * 3)
 
 # Starting from this board:
 ## print view((0610, 0061)),
