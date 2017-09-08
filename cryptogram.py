@@ -48,10 +48,10 @@ def puzzle(cryptogram):
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
 
-    def shift_to_space():
+    def shift_to_space(offset):
         if ' ' in decoder.values():
             while True:
-                shift_by(1)
+                shift_by(offset)
                 if ' ' == decoder[code[my.cursor]]:
                     break
 
@@ -95,7 +95,8 @@ def puzzle(cryptogram):
         elif key == 'right':   shift_by( 1)
         elif key == 'up':      shift_line(-1)
         elif key == 'down':    shift_line( 1)
-        elif key == '\t':      shift_to_space()
+        elif key == '\t':      shift_to_space( 1)
+        elif key == 'shift-tab': shift_to_space(-1)
         elif key == 'backspace':
             shift_by(-1)
             jot(' ')
