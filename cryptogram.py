@@ -40,6 +40,7 @@ def shell_run(command):
 def puzzle(cryptogram):
     def my(): pass        # A hack to get a mutable-nonlocal variable.
     my.cursor = 0         # TODO: simpler now to track line# and column#?
+    cryptogram = cryptogram.upper()
     code = ''.join(c for c in cryptogram if c.isalpha())
     assert code
     decoder = {c: ' ' for c in set(code)}
@@ -53,6 +54,13 @@ def puzzle(cryptogram):
             while True:
                 shift_by(offset)
                 if ' ' == decoder[code[my.cursor]]:
+                    break
+
+    def shift_to_code(offset, letter):
+        if letter in cryptogram:
+            while True:
+                shift_by(offset)
+                if letter == code[my.cursor]:
                     break
 
     def shift_line(offset):
@@ -103,9 +111,12 @@ def puzzle(cryptogram):
         elif key == 'del':
             jot(' ')
             shift_by(1)
-        elif key in string.ascii_letters + ' ':
+        elif key in alphabet or key == ' ':
             jot(key)
             shift_by(1)
+        elif key.upper() and len(key) == 1:
+            shift_to_code(1, key)
+
     # So the shell prompt after exit doesn't overwrite the middle:
     sturm.render(view(show_cursor=False))
 
