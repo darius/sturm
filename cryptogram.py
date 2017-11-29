@@ -41,10 +41,13 @@ def puzzle(cryptogram):
     def my(): pass        # A hack to get a mutable-nonlocal variable.
     my.cursor = 0         # TODO: simpler now to track line# and column#?
     cryptogram = cryptogram.upper()
-    code = ''.join(c for c in cryptogram if c.isalpha())
+    lines = map(clean, cryptogram.splitlines())
+    code_lines = filter(None, [''.join(c for c in line if c.isalpha())
+                               for line in lines])
+    line_starts = running_sum(map(len, code_lines))
+    code = ''.join(code_lines)
     assert code
     decoder = {c: ' ' for c in set(code)}
-    lines = map(clean, cryptogram.splitlines())
 
     def jot(letter):      decoder[code[my.cursor]] = letter
     def shift_by(offset): my.cursor = (my.cursor + offset) % len(code)
@@ -64,12 +67,11 @@ def puzzle(cryptogram):
                     break
 
     def shift_line(offset):
-        my.cursor = line_starts[(line_number(my.cursor) + offset) % len(lines)]
+        my.cursor = line_starts[(line_number(my.cursor) + offset)
+                                % (len(line_starts)-1)]
     def line_number(pos):
         return next(i for i, start in enumerate(line_starts) # TODO: use binary search
                     if start <= pos < line_starts[i+1])
-    line_starts = running_sum(sum(c.isalpha() for c in line)
-                              for line in lines)
 
     def view(show_cursor=True):
         counts = collections.Counter(v for v in decoder.values() if v != ' ')
