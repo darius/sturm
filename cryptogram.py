@@ -7,13 +7,13 @@ import sturm
 from sturm import ctrl
 
 def main(argv):
-    if   len(argv) == 1: make_cryptogram = lambda: random_encrypt(fortune())
-    elif len(argv) == 2: make_cryptogram = lambda: argv[1]
+    if   len(argv) == 1: cryptogram = random_encrypt(fortune())
+    elif len(argv) == 2: cryptogram = argv[1]
     else:
         print("Usage: python %s [cryptogram]" % sys.argv[0])
         sys.exit(1)
     with sturm.cbreak_mode():
-        puzzle(make_cryptogram())
+        puzzle(cryptogram)
 
 alphabet = string.ascii_lowercase
 
