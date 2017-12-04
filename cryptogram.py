@@ -60,7 +60,7 @@ def puzzle(cryptogram):
                     break
 
     def shift_to_code(offset, letter):
-        if letter in cryptogram:
+        if letter in code:
             while True:
                 shift_by(offset)
                 if letter == code[my.cursor]:
@@ -116,7 +116,7 @@ def puzzle(cryptogram):
         elif key in alphabet or key == ' ':
             jot(key)
             shift_by(1)
-        elif key.upper() and len(key) == 1:
+        elif key.isupper() and len(key) == 1:
             shift_to_code(1, key)
 
     # So the shell prompt after exit doesn't overwrite the middle:
